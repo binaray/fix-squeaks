@@ -11,16 +11,30 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// sql code to create table
-$sql = "CREATE TABLE Users(
-        id INT(2)  PRIMARY KEY, 
-        firstname VARCHAR(30) NOT NULL,
-        lastname VARCHAR(30) NOT NULL,
-        email VARCHAR(50)
-        )";
-
+// sql code to create tables
+// $sql = "CREATE TABLE Users(
+        // id INT(2)  PRIMARY KEY, 
+        // name VARCHAR(30) NOT NULL,
+        // email VARCHAR(50)
+		// phone INT(2)
+		// orders 
+        // )";
+// $sql = "CREATE TABLE Items(
+        // id INT(2)  PRIMARY KEY, 
+        // item VARCHAR(30) NOT NULL,
+		// image 
+        // category VARCHAR(30)
+		// price FLOAT(10)
+        // )";
+// $sql = "CREATE TABLE Requests(
+        // id INT(2)  PRIMARY KEY, 
+        // item VARCHAR(30) NOT NULL
+		// votes INT(2) NOT NULL
+		// )";
+$sql = "DROP TABLE Users";
+		
 if ($conn->query($sql) === TRUE) {
-    echo "Table users created successfully";
+    echo "Query successful";
 } else {
     echo "Error creating table: " . $conn->error;
 }
