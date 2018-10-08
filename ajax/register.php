@@ -61,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(!empty($email) && !empty($password)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO Users (email, password) VALUES (?, ?)";
+        $sql = "INSERT INTO Users (email, password, name, phone) VALUES (?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
