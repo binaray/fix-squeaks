@@ -1,10 +1,9 @@
 <?php
-require_once "_userconfig.php";
-//require_once "_itemconfig.php";
-
-//$_GET['category']
+if (!isset($_SESSION['email']))
+{
+	header("Location: login.php?redirect=sell");
+}
 ?>
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,37 +18,12 @@ require_once "_userconfig.php";
   </head>
   
   <body>
-	<?php include "header.php";?>
-	
+	<?php include "header.php";?>	
+  
 	<div class="container">
 		<div class="row">
+		
 		<?php
-			for ($x=0; $x<4; $x++){
-				echo 
-				'<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
-					<div class="img-thumbnail item">
-						<img src="https://cdn3.wpbeginner.com/wp-content/uploads/2014/10/broken-img-alt-text.jpg" alt="{$item}" width="100%" height="150">
-						<div class="caption">
-							<div align="center" class="text_item">Item 000</div>
-							<div align="center" class="text_category">Category</div>
-							<div align="center" class="text_price">Price</div>
-						</div>
-					</div>
-				</div>';
-			}
-			for ($x=0; $x<6; $x++){
-				echo 
-				'<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter electronics">
-					<div class="img-thumbnail item">
-						<img src="https://via.placeholder.com/150x150" alt="{$item}" width="100%" height="150">
-						<div class="caption">
-							<div align="center" class="text_item">Item 000</div>
-							<div align="center" class="text_category">Category</div>
-							<div align="center" class="text_price">Price</div>
-						</div>
-					</div>
-				</div>';
-			}
 		?>
 		</div>
 	</div>
