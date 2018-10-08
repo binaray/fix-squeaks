@@ -1,8 +1,10 @@
 <?php
-require_once "_userconfig.php";
-//require_once "_itemconfig.php";
+// require_once "_config.php";
 
 //$_GET['category']
+if (isset($_GET['logout'])){
+	if ($_GET['logout']) session_destroy();
+}
 ?>
 
 <!doctype html>

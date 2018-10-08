@@ -1,5 +1,4 @@
-	<?php session_start();?>
-	
+		
 	<div class="header">
 		<form class="form-inline">	
 			<div class="">
@@ -16,7 +15,7 @@
 					'<button id="button_login" type="button" class="btn btn-outline-success">Login</button>
 					<button id="button_register" type="button" class="btn btn-outline-danger">Register</button>';
 			else
-				echo '<button class="btn btn-outline-danger my-2 my-sm-0" href="/index.php?logout=true">Logout</a>';
+				echo '<a class="btn btn-outline-danger" href="/index.php?logout=true">Logout</a>';
 			?>
 		</form>
 				
@@ -67,22 +66,22 @@
 			'<div class="fixed-top overlay">
 				<div class="overlay_register overlay_form">
 					<h3 class="overlay_header">Register</h3>
-					<form enctype="multipart/form-data" action="/upload/namepicbioblock" method="post">
+					<form enctype="multipart/form-data" action="ajax/register.php" method="post">
 						<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
 						<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
 						<div class="form-row">
 							<div class="form-group col-md-6">
-								<input type="password" class="form-control" id="input_password" placeholder="Password">
+								<input type="password" class="form-control" id="input_password" placeholder="Password" required>
 							</div>
 							<div class="form-group col-md-6">
-								<input type="password" class="form-control" id="input_password_confirm" placeholder="Confirm Password">
+								<input type="password" class="form-control" id="input_password_confirm" name="password" placeholder="Confirm Password" required>
 							</div>
 							</div>
 						<div class="input-group">
 							<div class="input-group-prepend">
 							  <span class="input-group-text" id="validationTooltipUsernamePrepend">65</span>
 							</div>
-							<input type="tel" class="form-control" id="validationTooltipUsername" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
+							<input type="tel" class="form-control" id="validationTooltipUsername" name="phone" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
 						</div>
 						<div class="form-group">
 							<input type="submit" class="btn btn-primary" value="Submit">

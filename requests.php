@@ -1,7 +1,7 @@
 <?php
 if (!isset($_SESSION['email']))
 {
-	header("Location: login.php?redirect=sell");
+	header("Location: login.php?redirect=requests");
 }
 ?>
 <!doctype html>
