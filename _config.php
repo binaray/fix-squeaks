@@ -43,9 +43,9 @@ if ($link->connect_error) {
 		// )";
 // $sql = "DROP TABLE Users";
 		
-if ($link->query($sql) === TRUE) {
-    echo "Query successful:".$sql;
-} else {
-    echo "Query error: " . $link->error;
-}
+// if ($link->query($sql) === TRUE) {
+    // echo "Query successful:".$sql;
+// } else {
+    // echo "Query error: " . $link->error;
+// }
 ?>
