@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 // sql code to create tables
 // $sql = "CREATE TABLE Users(
         // userId INT(2)  PRIMARY KEY, 
-        // name VARCHAR(30) NOT NULL,
+        // name VARCHAR(30) NOT NULL UNIQUE,
         // email VARCHAR(50) NOT NULL,
         // password VARCHAR(50) NOT NULL,
 		// phone INT(2)
@@ -33,7 +33,7 @@ if ($conn->connect_error) {
         // item VARCHAR(30) NOT NULL,
 		// votes INT(2) NOT NULL
 		// )";
-// $sql = "DROP TABLE Users";
+$sql = "DROP TABLE Users";
 		
 if ($conn->query($sql) === TRUE) {
     echo "Query successful:".$sql;
