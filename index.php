@@ -1,5 +1,5 @@
 <?php
-require_once "_userconfig.php";
+//require_once "_userconfig.php";
 //require_once "_itemconfig.php";
 
 //$_GET['category']
