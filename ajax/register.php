@@ -1,5 +1,5 @@
 <?php
-require_once "/_config.php";
+require_once "../_config.php";
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){

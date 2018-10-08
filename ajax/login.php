@@ -1,5 +1,5 @@
 <?php
-require_once "/_config.php";
+require_once "../_config.php";
 
 $redirect=$_GET["redirect"];
 
