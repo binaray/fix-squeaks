@@ -22,13 +22,13 @@ if ($link->connect_error) {
 }
 
 // sql code to create tables
-// $sql = "CREATE TABLE Users(
-        // userId INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        // email VARCHAR(50) NOT NULL UNIQUE,
-        // password VARCHAR(255) NOT NULL,
-        // name VARCHAR(30) NOT NULL,
-		// phone INT(2)
-        // )";
+$sql = "CREATE TABLE Users(
+        userId INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        email VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        name VARCHAR(30) NOT NULL,
+		phone INT(2)
+        )";
 // $sql = "CREATE TABLE Receipts(
         // receiptId INT(3)  PRIMARY KEY AUTOINCREMENT, 
 		// userId INT(2) NOT NULL,
@@ -51,7 +51,7 @@ if ($link->connect_error) {
 		// quantity INT(2)
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 		// )";
-$sql = "DROP TABLE Users";
+// $sql = "DROP TABLE Users";
 		
 if ($link->query($sql) === TRUE) {
     echo "Query successful:".$sql;
