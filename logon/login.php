@@ -1,11 +1,10 @@
 <?php
 require_once "../_config.php";
 
-$redirect=$_GET["redirect"];
+//$redirect=$_GET["redirect"];
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    
-	// Validate email
+    // Validate email
     if(empty(trim($_POST["email"]))){
         echo "Please enter email.";     
     } else{
@@ -46,24 +45,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             save the email to the session */
                             session_start();
                             $_SESSION['email'] = $email;
-							switch ($redirect){
-								case "requests":
-									header("Location: /requests.php");
-									break;
-								case "sell":
-									header("Location: /sell.php");
-									break;
-								default:
-									header("Location: /index.php");
-							}
+							mysqli_stmt_close($stmt);
+							mysqli_close($link);
+							header("Location: ../index.php");
                         } else{
                             // Display an error message if password is not valid
-                            $password_err = 'The password you entered was not valid.';
+                            echo 'The password you entered was not valid.';
                         }
                     }
                 } else{
                     // Display an error message if email doesn't exist
-                    $email_err = 'No account found with that email.';
+                    echo 'No account found with that email.';
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";

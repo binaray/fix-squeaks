@@ -15,7 +15,8 @@
 					'<button id="button_login" type="button" class="btn btn-outline-success">Login</button>
 					<button id="button_register" type="button" class="btn btn-outline-danger">Register</button>';
 			else
-				echo '<a class="btn btn-outline-danger" href="/index.php?logout=true">Logout</a>';
+				echo '<button id="button_cart" type="button" class="btn btn-outline-success">Cart</button>
+					<a class="btn btn-outline-danger" href="/index.php?logout=true">Logout</a>';
 			?>
 		</form>
 				
@@ -66,7 +67,7 @@
 			'<div class="fixed-top overlay">
 				<div class="overlay_register overlay_form">
 					<h3 class="overlay_header">Register</h3>
-					<form enctype="multipart/form-data" action="ajax/register.php" method="post">
+					<form enctype="multipart/form-data" action="logon/register.php" method="post">
 						<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
 						<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
 						<div class="form-row">
@@ -92,7 +93,7 @@
 				
 				<div class="overlay_login overlay_form">
 					<h3 class="overlay_header">Login</h3>
-					<form enctype="multipart/form-data" action="/upload/namepicbioblock" method="post">
+					<form enctype="multipart/form-data" action="logon/login.php" method="post">
 						<input type="text" name="email" class="form-control" placeholder="Email" required>
 						<input type="password" name="password" class="form-control" placeholder="Password" required>
 						<div class="form-group">

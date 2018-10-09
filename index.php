@@ -1,10 +1,12 @@
 <?php
-// require_once "_config.php";
+require_once "_config.php";
+
+session_start();
+if (isset($_GET['logout'])){
+	if ($_GET['logout']) unset($_SESSION['email']);
+}
 
 //$_GET['category']
-if (isset($_GET['logout'])){
-	if ($_GET['logout']) session_destroy();
-}
 ?>
 
 <!doctype html>
