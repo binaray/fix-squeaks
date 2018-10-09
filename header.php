@@ -27,35 +27,47 @@
 		  <div class="collapse navbar-collapse justify-content-md-center" id="navbar">
 			<ul class="navbar-nav">
 			  <li class="nav-item filter-button" data-filter="all">
-				<a class="nav-link" href="index.php">All</a>
+				<a class="nav-link" href="/index.php">All</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="material">
-				<a class="nav-link" href="index.php?category=materials">Material</a>
+				<a class="nav-link" href="/index.php?category=materials">Material</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="electronics">
-				<a class="nav-link" href="index.php?category=electronics">Electronics</a>
+				<a class="nav-link" href="/index.php?category=electronics">Electronics</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="fasteners">
-				<a class="nav-link" href="index.php?category=fasteners">Fasteners</a>
+				<a class="nav-link" href="/index.php?category=fasteners">Fasteners</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="paint">
-				<a class="nav-link" href="index.php?category=paint">Paint</a>
+				<a class="nav-link" href="/index.php?category=paint">Paint</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="chemicals">
-				<a class="nav-link" href="index.php?category=chemicals">Chemicals</a>
+				<a class="nav-link" href="/index.php?category=chemicals">Chemicals</a>
 			  </li>
 			  <li class="nav-item filter-button" data-filter="amenities">
-				<a class="nav-link" href="index.php?category=amenities">Amenities</a>
+				<a class="nav-link" href="/index.php?category=amenities">Amenities</a>
 			  </li>
 			  <li class="nav-item disabled">
 				<div class="nav-link">|</div>
 			  </li>
 			  <li class="nav-item">
-				<a class="nav-link" href="requests.php">Requests</a>
+				<a class="nav-link" href="/requests.php">Requests</a>
 			  </li>
 			  <li class="nav-item">
-				<a class="nav-link" href="sell.php">Sell</a>
+				<a class="nav-link" href="/sell.php">Sell</a>
 			  </li>
+			  <?php 
+			  if (isset($_SESSION['email'])){
+				  if ($_SESSION['email']=="bigsqueak@pipsqueak.com")
+					  echo 
+						'<li class="nav-item disabled">
+							<div class="nav-link">|</div>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/admin/upload.php">Upload</a>
+						</li>';
+			  }
+			  ?>
 			</ul>
 		  </div>
 		</nav>

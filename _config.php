@@ -22,33 +22,33 @@ if ($link->connect_error) {
 }
 
 // sql code to create tables
-$sql = "CREATE TABLE Users(
-        userId INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        email VARCHAR(50) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
-        name VARCHAR(30) NOT NULL,
-		phone INT(2)
+// $sql = "CREATE TABLE Users(
+        // userId INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        // email VARCHAR(50) NOT NULL UNIQUE,
+        // password VARCHAR(255) NOT NULL,
+        // name VARCHAR(30) NOT NULL,
+		// phone INT(2)
+        // )";
+$sql = "CREATE TABLE Items(
+        itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        item VARCHAR(30) NOT NULL,
+		description VARCHAR(1000),
+		imageUrl VARCHAR(2000),
+        category VARCHAR(30),
+		price FLOAT(10)
         )";
 // $sql = "CREATE TABLE Receipts(
-        // receiptId INT(3)  PRIMARY KEY AUTOINCREMENT, 
+        // receiptId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		// userId INT(2) NOT NULL,
         // itemsBought VARCHAR(1000) NOT NULL,
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-		// }";
-// $sql = "CREATE TABLE Items(
-        // itemId INT(3)  PRIMARY KEY AUTOINCREMENT, 
-        // item VARCHAR(30) NOT NULL,
-		// description VARCHAR(1000),
-		// image VARCHAR(MAX),
-        // category VARCHAR(30),
-		// price FLOAT(10)
-        // )";
-// $sql = "CREATE TABLE OnSale(
-        // vendorId INT(3)  PRIMARY KEY AUTOINCREMENT, 
+		// )";
+// $sql = "CREATE TABLE Listing(
+        // vendorId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 		// userId INT(2),
         // itemId INT(3),
 		// price FLOAT(10),
-		// quantity INT(2)
+		// quantity INT(2),
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 		// )";
 // $sql = "DROP TABLE Users";
