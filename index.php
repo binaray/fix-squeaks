@@ -1,6 +1,19 @@
 <?php
 require_once "_config.php";
 
+// $sql="SELECT * FROM Items ORDER BY itemId DESC LIMIT 24";
+// $result = $link->query($sql);
+
+// if ($result->num_rows > 0) {
+    // // output data of each row
+    // while($row = $result->fetch_assoc()) {
+        // echo "id: " . $row["imageUrl"]. " - Name: " . $row["item"]. " " . $row["category"]. $row["price"]."<br>";
+    // }
+// } else {
+    // echo "0 results";
+// }
+// $link->close();
+
 session_start();
 if (isset($_GET['logout'])){
 	if ($_GET['logout']) unset($_SESSION['email']);

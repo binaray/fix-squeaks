@@ -29,14 +29,19 @@ if ($link->connect_error) {
         // name VARCHAR(30) NOT NULL,
 		// phone INT(2)
         // )";
-$sql = "CREATE TABLE Items(
-        itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        item VARCHAR(30) NOT NULL,
-		description VARCHAR(1000),
-		imageUrl VARCHAR(2000),
-        category VARCHAR(30),
-		price FLOAT(10)
-        )";
+//change to json table of items
+// $sql = "CREATE TABLE Items(
+        // itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        // itemName VARCHAR(30) NOT NULL,
+		// options VARCHAR(MAX),
+		// items VARCHAR(MAX),
+		//{ option1=>option2{description VARCHAR(1000),
+		// imageUrl VARCHAR(2000),
+		// price FLOAT(10),
+		// available BOOLEAN }}
+        // category VARCHAR(30),
+		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        // )";
 // $sql = "CREATE TABLE Receipts(
         // receiptId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		// userId INT(2) NOT NULL,
@@ -47,11 +52,12 @@ $sql = "CREATE TABLE Items(
         // vendorId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 		// userId INT(2),
         // itemId INT(3),
+		// secondHand BOOLEAN,
 		// price FLOAT(10),
 		// quantity INT(2),
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 		// )";
-// $sql = "DROP TABLE Users";
+$sql = "DROP TABLE Items";
 		
 if ($link->query($sql) === TRUE) {
     echo "Query successful:".$sql;

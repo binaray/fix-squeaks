@@ -6,18 +6,47 @@ if ($_SESSION['email']!="bigsqueak@pipsqueak.com")
 	header("location: ../index.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-	var_dump($_REQUEST);
 	
 	require_once "../_config.php";
 	
-	$csvString=$_POST["csvString"];
-	$data = str_getcsv($csvString, "\n"); //parse the rows 
+	$csvString = $_POST["csvString"];
+	$data = str_getcsv($csvString, "\n"); //parse the rows
+	
+	$success = 0;
+	$failures = 0;
+	
 	foreach($data as &$row) {
 		$row = str_getcsv($row); //parse the items in rows 
-		if (!empty($row[0]))
-			echo $row[0].$row[1].$row[2].$row[3].$row[4];
-		//var_dump($row);
+		if (!empty($row[0])){
+			
+			// Prepare an insert statement
+			$sql = "INSERT INTO Items (item, description, imageUrl, category, price) VALUES (?, ?, ?, ?, ?)";
+			 
+			if($stmt = mysqli_prepare($link, $sql)){
+				// Bind variables to the prepared statement as parameters
+				mysqli_stmt_bind_param($stmt, "ssssd", $param_item, $param_description, $param_imageUrl, $param_category, $param_price);
+				
+				// Set parameters
+				$param_item = $row[0];
+				$param_description = $row[1];
+				$param_imageUrl = $row[2];
+				$param_category = $row[3];
+				$param_price = $row[4];
+				
+				// Attempt to execute the prepared statement
+				if(mysqli_stmt_execute($stmt)){
+					$success++;
+					//echo "Success!";
+				} else{
+					$failures++;
+					//echo "Something went wrong. Please try again later.";
+				}
+				mysqli_stmt_close($stmt);
+			}
+		}
 	}
+	mysqli_close($link);
+	echo "Upload status: {$success} success, {$failures} failures.";
 	// $csvFile=$_FILES["csvFile"];
 // $sql = <<<eof
     // LOAD DATA INFILE '$csvFile'
