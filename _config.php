@@ -26,30 +26,26 @@ if ($link->connect_error) {
         // userId INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
         // email VARCHAR(50) NOT NULL UNIQUE,
         // password VARCHAR(255) NOT NULL,
-        // name VARCHAR(30) NOT NULL,
+        // name VARCHAR(50) NOT NULL,
 		// phone INT(2)
         // )";
-//change to json table of items
-// $sql = "CREATE TABLE Items(
-        // itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        // itemName VARCHAR(30) NOT NULL,
-		// options VARCHAR(MAX),
-		// items VARCHAR(MAX),
-		//{ option1=>option2{description VARCHAR(1000),
-		// imageUrl VARCHAR(2000),
-		// price FLOAT(10),
-		// available BOOLEAN }}
-        // category VARCHAR(30),
-		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-        // )";
+$sql = "CREATE TABLE Inventory(
+        itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        itemName VARCHAR(30) NOT NULL,
+		description VARCHAR(1000),
+		imageUrl VARCHAR(2000),
+		options TEXT,
+		items TEXT,
+        category VARCHAR(30)
+		)";
 // $sql = "CREATE TABLE Receipts(
-        // receiptId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		// userId INT(2) NOT NULL,
-        // itemsBought VARCHAR(1000) NOT NULL,
+        // receiptId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		// userId INT(2) FOREIGN KEY REFERENCES Users(userId),
+        // itemsBought VARCHAR(MAX) NOT NULL,
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 		// )";
-// $sql = "CREATE TABLE Listing(
-        // vendorId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+// $sql = "CREATE TABLE Listings(
+        // vendorId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 		// userId INT(2),
         // itemId INT(3),
 		// secondHand BOOLEAN,
@@ -57,7 +53,12 @@ if ($link->connect_error) {
 		// quantity INT(2),
 		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
 		// )";
-$sql = "DROP TABLE Items";
+// $sql = "CREATE TABLE Analytics(
+        // id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        // item VARCHAR(50) NOT NULL UNIQUE,
+		// timesClicked INT(2),
+		// )";
+// $sql = "DROP TABLE Inventory";
 		
 if ($link->query($sql) === TRUE) {
     echo "Query successful:".$sql;

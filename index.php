@@ -1,19 +1,6 @@
 <?php
 require_once "_config.php";
 
-// $sql="SELECT * FROM Items ORDER BY itemId DESC LIMIT 24";
-// $result = $link->query($sql);
-
-// if ($result->num_rows > 0) {
-    // // output data of each row
-    // while($row = $result->fetch_assoc()) {
-        // echo "id: " . $row["imageUrl"]. " - Name: " . $row["item"]. " " . $row["category"]. $row["price"]."<br>";
-    // }
-// } else {
-    // echo "0 results";
-// }
-// $link->close();
-
 session_start();
 if (isset($_GET['logout'])){
 	if ($_GET['logout']) unset($_SESSION['email']);
@@ -41,31 +28,77 @@ if (isset($_GET['logout'])){
 	<div class="container">
 		<div class="row">
 		<?php
-			for ($x=0; $x<4; $x++){
-				echo 
-				'<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
-					<div class="img-thumbnail item">
-						<img src="https://cdn3.wpbeginner.com/wp-content/uploads/2014/10/broken-img-alt-text.jpg" alt="{$item}" width="100%" height="150">
-						<div class="caption">
-							<div align="center" class="text_item">Item 000</div>
-							<div align="center" class="text_category">Category</div>
-							<div align="center" class="text_price">Price</div>
-						</div>
-					</div>
-				</div>';
+			if(isset($_GET["item"])){
+				$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
+				$result = $link->query($sql);
+				while($row = $result->fetch_assoc()) {
+					if ($result->num_rows== 0) echo "No such item!";
+					if(empty($row["options"])){	
+						echo "{$row["itemId"]} {$row["imageUrl"]} {$row["description"]} {$row["options"]} {$row["items"]} ";
+						$item = json_decode($row["items"], true);
+						
+						$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
+						$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
+					}
+					else{
+						echo "itemGroup type";
+					}
+				}
 			}
-			for ($x=0; $x<6; $x++){
-				echo 
-				'<div class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter electronics">
-					<div class="img-thumbnail item">
-						<img src="https://via.placeholder.com/150x150" alt="{$item}" width="100%" height="150">
-						<div class="caption">
-							<div align="center" class="text_item">Item 000</div>
-							<div align="center" class="text_category">Category</div>
-							<div align="center" class="text_price">Price</div>
+			else{ 
+				if(isset($_GET["page"])){
+					$offset=$_GET["page"]*ITEMS_PER_PAGE;
+					$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+				}
+				else{
+					$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24";
+				}
+				$result = $link->query($sql);
+
+				if ($result->num_rows > 0) {
+					// output data of each row
+					while($row = $result->fetch_assoc()) {
+						if(empty($row["options"])){
+							
+							$item = json_decode($row["items"], true);
+							
+							$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
+							$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
+							
+							echo 
+								'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+									<div class="img-thumbnail item">
+										<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+										<div class="caption">
+											<div align="center" class="text_item">'.$row["itemName"].'</div>
+											<div align="center" class="text_category">'.$row["category"].'</div>
+											<div align="center" class="text_price">'.$price.'</div>
+										</div>
+									</div>
+								</a>';
+						}
+						else{
+							echo "itemGroup type";
+						}
+					}
+				} else {
+					echo "0 results";
+				}
+				$link->close();
+				
+				for ($x=0; $x<4; $x++){
+					echo 
+					'<a href="admin/upload.php" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
+						<div class="img-thumbnail item">
+							<img src="https://cdn3.wpbeginner.com/wp-content/uploads/2014/10/broken-img-alt-text.jpg" alt="{$item}" width="100%" height="150">
+							<div class="caption">
+								<div align="center" class="text_item">Test Item</div>
+								<div align="center" class="text_category">Category</div>
+								<div align="center" class="text_price">Price</div>
+							</div>
 						</div>
-					</div>
-				</div>';
+					</a>';
+				}
 			}
 		?>
 		</div>
@@ -77,5 +110,8 @@ if (isset($_GET['logout'])){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
 	<script src="js/logon.js"></script>
+	<script type="text/javascript">
+	
+	</script>
   </body>
 </html>
