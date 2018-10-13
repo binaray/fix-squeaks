@@ -29,15 +29,15 @@ if ($link->connect_error) {
         // name VARCHAR(50) NOT NULL,
 		// phone INT(2)
         // )";
-$sql = "CREATE TABLE Inventory(
-        itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        itemName VARCHAR(30) NOT NULL,
-		description VARCHAR(1000),
-		imageUrl VARCHAR(2000),
-		options TEXT,
-		items TEXT,
-        category VARCHAR(30)
-		)";
+// $sql = "CREATE TABLE Inventory(
+        // itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        // itemName VARCHAR(30) NOT NULL,
+		// description VARCHAR(1000),
+		// imageUrl VARCHAR(2000),
+		// options TEXT,
+		// items TEXT,
+        // category VARCHAR(30)
+		// )";
 // $sql = "CREATE TABLE Receipts(
         // receiptId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		// userId INT(2) FOREIGN KEY REFERENCES Users(userId),
@@ -60,9 +60,9 @@ $sql = "CREATE TABLE Inventory(
 		// )";
 // $sql = "DROP TABLE Inventory";
 		
-if ($link->query($sql) === TRUE) {
-    echo "Query successful:".$sql;
-} else {
-    echo "Query error: " . $link->error;
-}
+// if ($link->query($sql) === TRUE) {
+    // echo "Query successful:".$sql;
+// } else {
+    // echo "Query error: " . $link->error;
+// }
 ?>

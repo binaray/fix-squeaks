@@ -39,6 +39,7 @@ if (isset($_GET['logout'])){
 						
 						$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
 						$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
+						echo '<button type="button" class="btn btn-outline-primary">Add to cart</button>';
 					}
 					else{
 						echo "itemGroup type";
