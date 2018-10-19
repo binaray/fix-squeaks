@@ -2,15 +2,14 @@
 
 $(document).ready(function () {
 	var option_count=0;
+	var option_combinations=[];
 	toggleDelButton();
 	
 	$("#inputOptions"+option_count).keyup(function(event){
 		if ( event.which == 13 ) {
 			event.preventDefault();
 		}
-		let itemsHelp=recursiveCheck(option_count);
-		console.log(itemsHelp);
-		$( "#itemsHelp" ).replaceWith("<div id='itemsHelp'>"+itemsHelp+"</div>");
+		getItemHelp();
 	});
 	
 	$("#button_addOption").click(function(){
@@ -25,9 +24,7 @@ $(document).ready(function () {
 			if ( event.which == 13 ) {
 				event.preventDefault();
 			}
-			let itemsHelp=recursiveCheck(option_count);
-			console.log(itemsHelp);
-			$( "#itemsHelp" ).replaceWith("<div id='itemsHelp'>"+itemsHelp+"</div>");
+			getItemHelp();
 		});
 		toggleDelButton();
 	});
@@ -40,6 +37,7 @@ $(document).ready(function () {
 	});
 	
 	function getItemHelp(){		
+		option_combinations=[];
 		let itemsHelp=recursiveCheck(option_count);
 		console.log(itemsHelp);
 		$( "#itemsHelp" ).replaceWith("<div id='itemsHelp'>"+itemsHelp+"</div>");
@@ -50,18 +48,17 @@ $(document).ready(function () {
 		else $("#button_deleteOption").hide();
 	}
 	
-	function recursiveCheck(currentDepth){
-		let res="";
+	//magic function
+	function recursiveCheck(currentDepth, cursor=""){
+		// let res="";
 		var optionString = $( "#inputOptions"+currentDepth).val();
 		var options=optionString.split(',');
 		for (var x in options){
-			console.log(options[x]);
-			res=res+" "+options[x];
 			if (currentDepth!=0){
-				res=res+" "+recursiveCheck(currentDepth-1);
+				recursiveCheck(currentDepth-1,cursor+" "+options[x]);
 			}
-			else res+=': description, imageUrl, price, availability<br>';
+			else option_combinations.push(cursor+' '+options[x]+': description, imageUrl, price, availability<br>');
 		}
-		return res;
+		return option_combinations;
 	}
 });

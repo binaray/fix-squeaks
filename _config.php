@@ -27,7 +27,8 @@ if ($link->connect_error) {
         // email VARCHAR(50) NOT NULL UNIQUE,
         // password VARCHAR(255) NOT NULL,
         // name VARCHAR(50) NOT NULL,
-		// phone INT(2)
+		// phone INT(2),
+		// telegramId BIGINT
         // )";
 // $sql = "CREATE TABLE Inventory(
         // itemId INT(3) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -38,31 +39,38 @@ if ($link->connect_error) {
 		// items TEXT,
         // category VARCHAR(30)
 		// )";
-// $sql = "CREATE TABLE Receipts(
+// $sql = "CREATE TABLE Orders(
         // receiptId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		// userId INT(2) FOREIGN KEY REFERENCES Users(userId),
-        // itemsBought VARCHAR(MAX) NOT NULL,
-		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+		// userId INT(2),
+        // itemsBought TEXT NOT NULL,
+		// status VARCHAR(10),
+		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+		// FOREIGN KEY (userId) REFERENCES Users(userId)
 		// )";
 // $sql = "CREATE TABLE Listings(
-        // vendorId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-		// userId INT(2),
+        // listingId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+		// userId INT(2) NOT NULL,
         // itemId INT(3),
-		// secondHand BOOLEAN,
+		// properties TEXT,
 		// price FLOAT(10),
 		// quantity INT(2),
-		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+		// secondHand BOOLEAN,
+		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+		// reserved BOOLEAN,		
+		// FOREIGN KEY (userId) REFERENCES Users(userId)
 		// )";
 // $sql = "CREATE TABLE Analytics(
         // id INT(2) NOT NULL PRIMARY KEY AUTO_INCREMENT,
         // item VARCHAR(50) NOT NULL UNIQUE,
 		// timesClicked INT(2),
 		// )";
-// $sql = "DROP TABLE Inventory";
+// $sql = "DROP TABLE Listings";
+$sql = "ALTER TABLE Users
+		ADD telegramId BIGINT";
 		
-// if ($link->query($sql) === TRUE) {
-    // echo "Query successful:".$sql;
-// } else {
-    // echo "Query error: " . $link->error;
-// }
+if ($link->query($sql) === TRUE) {
+    echo "Query successful:".$sql;
+} else {
+    echo "Query error: " . $link->error;
+}
 ?>

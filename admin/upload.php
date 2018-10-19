@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-if ($_SESSION['email']!="bigsqueak@pipsqueak.com")
-	header("location: ../index.php");
+// if ($_SESSION['email']!="bigsqueak@pipsqueak.com")
+	// header("location: ../index.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	
@@ -30,12 +30,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						mysqli_stmt_bind_param($stmt, "sssss", $itemName, $description, $imageUrl, $item, $category);
 						
 						// Set parameters
-						$itemName = $row[0];
-						$description = $row[1];
-						$imageUrl = $row[2];
-						$category = strtolower($row[3]);
-						$price = $row[4];
-						$availability = $row[5];
+						$itemName = trim($row[0]);
+						$description = trim($row[1]);
+						$imageUrl = trim($row[2]);
+						$category = trim(strtolower($row[3]));
+						$price = trim($row[4]);
+						$availability = trim($row[5]);
 						
 						$item=json_encode(array(
 							'price' => $price,
@@ -51,50 +51,68 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						mysqli_stmt_close($stmt);
 					}
 				}
-			}
-			mysqli_close($link);
-			
+			}			
 			echo "Upload status: {$success} success, {$failures} failures.";
 		}
 		else{
-			$itemGen = str_getcsv($_POST["item"]);
-			// Set parameters
-			$itemName = $itemGen[0];
-			$description = $itemGen[1];
-			$defImageUrl = $itemGen[2];
-			$category = strtolower($itemGen[3]);
+			$sql = "INSERT INTO Inventory (itemName, description, imageUrl, options, items, category) VALUES (?, ?, ?, ?, ?, ?)";
 			
-			$x=0;
-			$options_multi=array();
-			while(!empty($_POST["options{$x}"])&&!empty($_POST["type{$x}"])){
-				$options = str_getcsv($_POST["options{$x}"]);
-				$type = $_POST["type{$x}"];
+			if($stmt = mysqli_prepare($link, $sql)){
+				// Bind variables to the prepared statement as parameters
+				mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $defImageUrl, $options_multi, $items_multi, $category);
+				echo $_POST["item"];
+				$itemGen = str_getcsv($_POST["item"]);	//general item details
+				// Set parameters
+				$itemName = trim($itemGen[0]);
+				$description = trim($itemGen[1]);
+				$defImageUrl = trim($itemGen[2]);
+				$category = trim(strtolower($itemGen[3]));
 				
-				$options_multi[$type] = array();
-				$options_multi[$type][] = $options;
-				$x++;
-			}
-			$options_multi=json_encode($options_multi);
-			
-			$items_multi=array();
-			$data = str_getcsv($_POST["items"], "\n"); //parse the rows
-			foreach($data as &$row) {
-				$row = str_getcsv($row);
+				$x=0;
+				$options_multi=array();
+				while(!empty($_POST["options{$x}"])&&!empty($_POST["type{$x}"])){
+					$options = str_getcsv($_POST["options{$x}"]);
+					$type = $_POST["type{$x}"];
+					
+					$options_multi[$type] = array();
+					foreach($options as $option){
+						array_push($options_multi[$type],trim($option));
+					}
+					//$options_multi[$type][] = $options;
+					$x++;
+				}
+				$options_multi=json_encode($options_multi);
 				
-				$addDescription = $row[0];
-				$imageUrl = $row[1];
-				$price = $row[2];
-				$availability = $row[3];
+				$items_multi=array();
+				$data = str_getcsv($_POST["items"], "\n"); //parse the rows
+				foreach($data as &$row) {
+					$row = str_getcsv($row);
+					
+					$addDescription = trim($row[0]);
+					$imageUrl = trim($row[1]);
+					$price = trim($row[2]);
+					$availability = trim($row[3]);
+					
+					$item=array(
+						'description' => $addDescription,
+						'imageUrl' => $imageUrl,
+						'price' => $price,
+						'availability' => $availability
+					);
+					array_push($items_multi,$item);
+				}
+				$items_multi=json_encode($items_multi);
 				
-				$item=array(
-					'description' => $addDescription,
-					'imageUrl' => $imageUrl,
-					'price' => $price,
-					'availability' => $availability
-				);
-				array_push($items_multi,$item);
+				// Attempt to execute the prepared statement
+				if(mysqli_stmt_execute($stmt)){
+					echo "Successfully added multi-item!";
+				} else{
+					echo "Failed to execute statement...";
+				}
+				mysqli_stmt_close($stmt);
 			}
 		}
+		mysqli_close($link);
 	}
 }
 ?>
@@ -128,7 +146,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		</form>
 		<form id="itemGroup" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=group"?>" method="post">
 			<h5>item group upload (SINGLE ITEM GROUP ONLY)</h5>
+			<p>Input format:<br>
+			itemName, description, defaultImageUrl, category
+			</p>
 			<input type="text" class="form-control" name="item" placeholder="itemName, description, defaultImageUrl, category" required>
+			<div class="row">
+			
+			</div>
 			<div id="itemOptions">
 				<div id="options0" class="form-group form-row">
 					<input type="text" class="form-control col-3" name="type0" placeholder="type">
@@ -142,7 +166,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				<textarea rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, availability" required></textarea>
 			</div>
 			<div class="form-group">
-				<input type="submit" class="btn btn-primary disabled" value="Submit">
+				<input type="submit" class="btn btn-primary" value="Submit">
 			</div>
 		</form>
 	</div>	

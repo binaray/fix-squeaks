@@ -33,6 +33,7 @@ if (isset($_GET['logout'])){
 				$result = $link->query($sql);
 				while($row = $result->fetch_assoc()) {
 					if ($result->num_rows== 0) echo "No such item!";
+					echo $row["itemName"];
 					if(empty($row["options"])){	
 						echo "{$row["itemId"]} {$row["imageUrl"]} {$row["description"]} {$row["options"]} {$row["items"]} ";
 						$item = json_decode($row["items"], true);
@@ -42,29 +43,49 @@ if (isset($_GET['logout'])){
 						echo '<button type="button" class="btn btn-outline-primary">Add to cart</button>';
 					}
 					else{
-						echo "itemGroup type";
+						echo "{$row["itemId"]} {$row["imageUrl"]} {$row["description"]} {$row["options"]}";
+						$items = json_decode($row["items"], true);
+						$options = json_decode($row["options"], true);
+						
+						foreach($items as $item){
+							echo "</div><div class='row'><p>".$item["description"].$item["imageUrl"].$item["price"].$item["availability"]."</p>";
+							
+						}
 					}
 				}
 			}
-			else{ 
+			else{
 				if(isset($_GET["page"])){
 					$offset=$_GET["page"]*ITEMS_PER_PAGE;
-					$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+					if(isset($_GET["category"])){
+						$category = $_GET["category"];
+						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+					}
+					else
+						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
 				}
 				else{
-					$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24";
+					if(isset($_GET["category"])){
+						$category = $_GET["category"];
+						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24";
+					}
+					else
+						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24";
 				}
+				echo $sql;
 				$result = $link->query($sql);
 
 				if ($result->num_rows > 0) {
 					// output data of each row
 					while($row = $result->fetch_assoc()) {
-						if(empty($row["options"])){
+						
+						$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
+						
+						//single item type
+						if(empty($row["options"])){	
 							
 							$item = json_decode($row["items"], true);
-							
 							$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
-							$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
 							
 							echo 
 								'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
@@ -78,8 +99,32 @@ if (isset($_GET['logout'])){
 									</div>
 								</a>';
 						}
+						
+						//item multi type
 						else{
-							echo "itemGroup type";
+							
+							$items = json_decode($row["items"], true);
+							$avg_price = 0;
+							$count=0;
+							
+							foreach ($items as $item){
+								$avg_price += $item["price"];
+								$count++;
+							}
+							$avg_price /= $count;
+							$avg_price = (empty($avg_price)) ? "Price unavailable" : "$".$avg_price;
+							
+							echo 
+								'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+									<div class="img-thumbnail item">
+										<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+										<div class="caption">
+											<div align="center" class="text_item">'.$row["itemName"].'</div>
+											<div align="center" class="text_category">'.$row["category"].'</div>
+											<div align="center" class="text_price">'.$avg_price.'</div>
+										</div>
+									</div>
+								</a>';
 						}
 					}
 				} else {
@@ -89,7 +134,7 @@ if (isset($_GET['logout'])){
 				
 				for ($x=0; $x<4; $x++){
 					echo 
-					'<a href="admin/upload.php" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
+					'<a href="admin/upload" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
 						<div class="img-thumbnail item">
 							<img src="https://cdn3.wpbeginner.com/wp-content/uploads/2014/10/broken-img-alt-text.jpg" alt="{$item}" width="100%" height="150">
 							<div class="caption">

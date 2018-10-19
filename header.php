@@ -21,7 +21,7 @@ const ITEMS_PER_PAGE=24;
 				<button id="button_register" type="button" class="btn btn-outline-danger">Register</button>';
 		else
 			echo '<button id="button_cart" type="button" class="btn btn-outline-success">Cart</button>
-				<a class="btn btn-outline-danger" href="/index.php?logout=true">Logout</a>';
+				<a class="btn btn-outline-danger" href="/index?logout=true">Logout</a>';
 		?>
 	</form>
 			
@@ -32,34 +32,34 @@ const ITEMS_PER_PAGE=24;
 	  <div class="collapse navbar-collapse justify-content-md-center" id="navbar">
 		<ul class="navbar-nav">
 		  <li class="nav-item filter-button" data-filter="all">
-			<a class="nav-link" href="/index.php">All</a>
+			<a class="nav-link" href="/index">All</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="material">
-			<a class="nav-link" href="/index.php?category=materials">Material</a>
+			<a class="nav-link" href="/index?category=materials">Material</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="electronics">
-			<a class="nav-link" href="/index.php?category=electronics">Electronics</a>
+			<a class="nav-link" href="/index?category=electronics">Electronics</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="fasteners">
-			<a class="nav-link" href="/index.php?category=fasteners">Fasteners</a>
+			<a class="nav-link" href="/index?category=fasteners">Fasteners</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="paint">
-			<a class="nav-link" href="/index.php?category=paint">Paint</a>
+			<a class="nav-link" href="/index?category=paint">Paint</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="chemicals">
-			<a class="nav-link" href="/index.php?category=chemicals">Chemicals</a>
+			<a class="nav-link" href="/index?category=chemicals">Chemicals</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="amenities">
-			<a class="nav-link" href="/index.php?category=amenities">Amenities</a>
+			<a class="nav-link" href="/index?category=amenities">Amenities</a>
 		  </li>
 		  <li class="nav-item disabled">
 			<div class="nav-link">|</div>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/requests.php">Requests</a>
+			<a class="nav-link" href="/requests">Requests</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" href="/sell.php">Sell</a>
+			<a class="nav-link" href="/sell">Sell</a>
 		  </li>
 		  <?php 
 		  if (isset($_SESSION['email'])){
@@ -69,7 +69,7 @@ const ITEMS_PER_PAGE=24;
 						<div class="nav-link">|</div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/admin/upload.php">Upload</a>
+						<a class="nav-link" href="/admin/upload">Upload</a>
 					</li>';
 		  }
 		  ?>
@@ -84,7 +84,7 @@ if (!isset($_SESSION['email'])){
 		'<div class="fixed-top overlay">
 			<div class="overlay_register overlay_form">
 				<h3 class="overlay_header">Register</h3>
-				<form enctype="multipart/form-data" action="logon/register.php" method="post">
+				<form enctype="multipart/form-data" action="logon/register" method="post">
 					<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
 					<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
 					<div class="form-row">
@@ -110,7 +110,7 @@ if (!isset($_SESSION['email'])){
 			
 			<div class="overlay_login overlay_form">
 				<h3 class="overlay_header">Login</h3>
-				<form enctype="multipart/form-data" action="logon/login.php" method="post">
+				<form enctype="multipart/form-data" action="logon/login" method="post">
 					<input type="text" name="email" class="form-control" placeholder="Email" required>
 					<input type="password" name="password" class="form-control" placeholder="Password" required>
 					<div class="form-group">
