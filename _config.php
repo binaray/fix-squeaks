@@ -51,12 +51,12 @@ if ($link->connect_error) {
         // listingId BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 		// userId INT(2) NOT NULL,
         // itemId INT(3),
-		// properties TEXT,
+		// properties TEXT,	//json{type:property, type:property}
 		// price FLOAT(10),
 		// quantity INT(2),
-		// secondHand BOOLEAN,
-		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-		// reserved BOOLEAN,		
+		// secondHand BOOLEAN,	//ignore
+		// createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,	//ignore
+		// reserved BOOLEAN,		//ignore
 		// FOREIGN KEY (userId) REFERENCES Users(userId)
 		// )";
 // $sql = "CREATE TABLE Analytics(
@@ -65,12 +65,12 @@ if ($link->connect_error) {
 		// timesClicked INT(2),
 		// )";
 // $sql = "DROP TABLE Listings";
-$sql = "ALTER TABLE Users
-		ADD telegramId BIGINT";
+// $sql = "ALTER TABLE Users
+		// ADD telegramId BIGINT";
 		
-if ($link->query($sql) === TRUE) {
-    echo "Query successful:".$sql;
-} else {
-    echo "Query error: " . $link->error;
-}
+// if ($link->query($sql) === TRUE) {
+    // echo "Query successful:".$sql;
+// } else {
+    // echo "Query error: " . $link->error;
+// }
 ?>

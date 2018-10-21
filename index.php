@@ -5,8 +5,6 @@ session_start();
 if (isset($_GET['logout'])){
 	if ($_GET['logout']) unset($_SESSION['email']);
 }
-
-//$_GET['category']
 ?>
 
 <!doctype html>
@@ -72,7 +70,7 @@ if (isset($_GET['logout'])){
 					else
 						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24";
 				}
-				echo $sql;
+				
 				$result = $link->query($sql);
 
 				if ($result->num_rows > 0) {

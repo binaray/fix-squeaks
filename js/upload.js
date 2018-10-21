@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
 	var option_count=0;
-	var option_combinations=[];
+	var option_combinations="";
 	toggleDelButton();
 	
 	$("#inputOptions"+option_count).keyup(function(event){
@@ -37,10 +37,10 @@ $(document).ready(function () {
 	});
 	
 	function getItemHelp(){		
-		option_combinations=[];
+		option_combinations="";
 		let itemsHelp=recursiveCheck(option_count);
 		console.log(itemsHelp);
-		$( "#itemsHelp" ).replaceWith("<div id='itemsHelp'>"+itemsHelp+"</div>");
+		$( "#itemsHelp" ).val(itemsHelp);
 	}
 	
 	function toggleDelButton(){
@@ -55,9 +55,9 @@ $(document).ready(function () {
 		var options=optionString.split(',');
 		for (var x in options){
 			if (currentDepth!=0){
-				recursiveCheck(currentDepth-1,cursor+" "+options[x]);
+				recursiveCheck(currentDepth-1,cursor+', '+options[x]);
 			}
-			else option_combinations.push(cursor+' '+options[x]+': description, imageUrl, price, availability<br>');
+			else option_combinations+=(cursor+', '+options[x]+'\n');
 		}
 		return option_combinations;
 	}

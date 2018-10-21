@@ -11,7 +11,7 @@ const ITEMS_PER_PAGE=24;
 			<div>we buy/sell and fix things</div>
 		</div>
 		<div class="form-inline mx-auto">
-			<input type="text" class="form-control" placeholder="Search item..." id="searchInput" class="search">
+			<input type="text" class="form-control" placeholder="Enter to search..." id="searchInput" class="search">
 			<button type="button" class="btn btn-outline-primary">Search</button>
 		</div>
 		<?php

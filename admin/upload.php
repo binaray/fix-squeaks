@@ -60,7 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			if($stmt = mysqli_prepare($link, $sql)){
 				// Bind variables to the prepared statement as parameters
 				mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $defImageUrl, $options_multi, $items_multi, $category);
-				echo $_POST["item"];
+				
 				$itemGen = str_getcsv($_POST["item"]);	//general item details
 				// Set parameters
 				$itemName = trim($itemGen[0]);
@@ -85,8 +85,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				
 				$items_multi=array();
 				$data = str_getcsv($_POST["items"], "\n"); //parse the rows
-				foreach($data as &$row) {
-					$row = str_getcsv($row);
+				$property_combination = str_getcsv($_POST["propertyCombination"], "\n");
+				
+				for ($i = 0; $i < count($data); $i++) {
+					$row = str_getcsv($data[$i]);
+					$properties = str_getcsv($property_combination[$i]);
+					$empty = array_shift($properties);
+					$properties = array_map('trim', $properties);
 					
 					$addDescription = trim($row[0]);
 					$imageUrl = trim($row[1]);
@@ -94,6 +99,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$availability = trim($row[3]);
 					
 					$item=array(
+						'properties' => $properties,
 						'description' => $addDescription,
 						'imageUrl' => $imageUrl,
 						'price' => $price,
@@ -101,6 +107,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					);
 					array_push($items_multi,$item);
 				}
+				
 				$items_multi=json_encode($items_multi);
 				
 				// Attempt to execute the prepared statement
@@ -161,9 +168,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			</div>
 			<button id="button_addOption" type="button" class="btn btn-outline-danger">Add new option</button>
 			<button id="button_deleteOption" type="button" class="btn btn-outline-danger">Delete option</button>
-			<div id="items" class="form-group">
-				<div id='itemsHelp'></div>
-				<textarea rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, availability" required></textarea>
+			<div id="items" class="form-group form-row">
+				<textarea id='itemsHelp' class="form-control col-3" rows="4" cols="100%" form="itemGroup" name="propertyCombination" placeholder="options" readonly required></textarea>
+				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, availability" required></textarea>
 			</div>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">
