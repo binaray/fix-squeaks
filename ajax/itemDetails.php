@@ -1,4 +1,5 @@
 <?php
+//DEPRECATED: TO REMOVE
 //To check whether single or multi item- check if options empty
 require_once "../_config.php";
 

@@ -5,6 +5,7 @@
 // }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+	require_once "_config.php";
 	
 	$x=0;
 	$itemId = $_POST["itemId"];

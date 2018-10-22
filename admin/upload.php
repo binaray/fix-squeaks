@@ -168,6 +168,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			</div>
 			<button id="button_addOption" type="button" class="btn btn-outline-danger">Add new option</button>
 			<button id="button_deleteOption" type="button" class="btn btn-outline-danger">Delete option</button>
+			<p>Input format:<br>
+			description, imageUrl, price, availability<br>
+			description, imageUrl, price, availability
+			</p>
 			<div id="items" class="form-group form-row">
 				<textarea id='itemsHelp' class="form-control col-3" rows="4" cols="100%" form="itemGroup" name="propertyCombination" placeholder="options" readonly required></textarea>
 				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, availability" required></textarea>

@@ -87,11 +87,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 							
 							// Attempt to execute the prepared statement
 							if(mysqli_stmt_execute($stmt)){
-								// Redirect to login page
+								// Redirect to login page?
 								mysqli_stmt_close($stmt);
 								mysqli_close($link);
-								echo "Registration successful! Close your browser or visit our main page here!";
-								//header("location: ../index.php");
+								echo "Registration successful! Close your browser or visit our <a href='../'>main page here</a>!";
 							} else{
 								echo "Something went wrong. Please try again later.";
 							}
