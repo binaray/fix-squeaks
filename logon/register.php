@@ -116,7 +116,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					// Redirect to login page
 					mysqli_stmt_close($stmt);
 					mysqli_close($link);
-					header("location: ../index.php");
+					echo "Successfully registered!\n"
+					header("location: ../");
 				} else{
 					echo "Something went wrong. Please try again later.";
 				}
@@ -127,7 +128,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     mysqli_close($link);
 }else{
 	//show register page
-	echo "";
 }
 ?>
 
@@ -146,50 +146,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email"class="form-control" value="<?php echo $email; ?>" required>
-                <span class="help-block"><?php echo $email_err; ?></span>
+                <input type="email" name="email"class="form-control" required>
             </div>    
-            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group">
                 <label>Password</label>
-                <input type="password" name="password" class="form-control" value="<?php echo $password; ?>" required>
-                <span class="help-block"><?php echo $password_err; ?></span>
+                <input type="password" name="password" class="form-control" required>
             </div>
-            <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>" required>
-                <span class="help-block"><?php echo $confirm_password_err; ?></span>
+                <input type="password" name="confirm_password" class="form-control" required>
             </div>
 			
-			<div class="row">
-				<div class="col-md-6 mb-3">
-					<label for="firstName">First name</label>
-					<input type="text" name="firstName" class="form-control" id="firstName" placeholder="" value="<?php echo $firstName; ?>" required>
-					<div class="invalid-feedback">
-						Valid first name is required.
-					</div>
-				</div>
-				<div class="col-md-6 mb-3">
-					<label for="lastName">Last name</label>
-					<input type="text" name="lastName" class="form-control" id="lastName" placeholder="" value="<?php echo $lastName; ?>" required>
-					<div class="invalid-feedback">
-						Valid last name is required.
-					</div>
-				</div>
+			<div class="form-group">
+				<label for="name">Full name</label>
+				<input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
+				<span class="help-block">Note that name given will be reflected in receipts</span>
             </div>
 			
-			<div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                <label>Company name</label>
-                <input type="text" name="companyName" class="form-control" value="<?php echo $companyName; ?>" required>
-                <span class="help-block"><?php echo $email_err; ?></span>
+			<div class="form-group">
+                <label>Phone number</label>
+                <input type="number" name="phone" class="form-control" required>
             </div>
 			
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
                 <input type="reset" class="btn btn-default" value="Reset">
             </div>
-            <p>Already have an account? <a href="login.php">Login here</a>.</p>
+            <p>Already have an account? <a href="login">Login here</a>.</p>
         </form>
     </div>    
 </body>
