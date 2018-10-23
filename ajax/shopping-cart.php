@@ -13,5 +13,4 @@ if (isset($_SESSION['email'])){
 else {
 	echo "Please login!";
 }
-// unset($_SESSION["cart"]);
 ?>

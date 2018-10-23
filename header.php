@@ -20,7 +20,7 @@ const ITEMS_PER_PAGE=24;
 				'<button id="button_login" type="button" class="btn btn-outline-success">Login</button>
 				<button id="button_register" type="button" class="btn btn-outline-danger">Register</button>';
 		else
-			echo '<a class="btn btn-outline-success" href="/checkout>Shopping cart</a>
+			echo '<a class="btn btn-outline-success" href="/checkout">Shopping cart</a>
 				<a class="btn btn-outline-danger" href="/index?logout=true">Logout</a>';
 		?>
 	</form>
@@ -70,6 +70,9 @@ const ITEMS_PER_PAGE=24;
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/admin/upload">Upload</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/admin/orders">User Orders</a>
 					</li>';
 		  }
 		  ?>

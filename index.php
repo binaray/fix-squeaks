@@ -32,10 +32,12 @@ if (isset($_GET['logout'])){
 				while($row = $result->fetch_assoc()) {
 					if ($result->num_rows== 0) echo "No such item!";
 					
+					$spinner_html="";
+					$add_description="";
+					
 					if(!empty($row["options"])){
 						$options=json_decode($row["options"],true);
 						$option_count=0;
-						$spinner_html="";
 						
 						foreach ($options as $option => $properties){
 							$spinner_html.='<label>'.$option.'</label>
@@ -58,6 +60,7 @@ if (isset($_GET['logout'])){
 					}
 					//----------------------------------single item------------------------------------------//
 					else{
+						$item_json = $row["items"];
 						$item = json_decode($row["items"], true);
 						$price = (empty($item["price"])) ? "Price unavailable" : $item["price"];
 						$button_order = ($item["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
@@ -115,7 +118,6 @@ if (isset($_GET['logout'])){
 						
 						//single item type
 						if(empty($row["options"])){
-							
 							$item = json_decode($row["items"], true);
 							$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
 							
@@ -134,7 +136,6 @@ if (isset($_GET['logout'])){
 						
 						//item multi type
 						else{
-							
 							$items = json_decode($row["items"], true);
 							$avg_price = 0;
 							$count=0;
@@ -214,7 +215,17 @@ if (isset($_GET['logout'])){
 	
 	
 	$(document).ready(function () {
-		let items = JSON.parse('<?php echo $items_json?>');
+		
+		<?php 
+		if(!isset($option)){
+			echo
+		'
+		let current_item = JSON.parse(\''.$item_json.'\');
+		';
+		}
+		else{
+			echo
+		'let items = JSON.parse(\''.$items_json.'\');
 		let option_count = items[0]["properties"].length-1;
 		let current_item = items[0];
 		
@@ -242,7 +253,9 @@ if (isset($_GET['logout'])){
 			$("#price").text(current_item["price"]);
 			$("#input_price").val(current_item["price"]);
 			$("#text_itemDescription").text(current_item["description"]);
+		}';
 		}
+		?>
 		
 		$("#button_addToCart").click(function(){
 			let url = new URL(window.location.href);

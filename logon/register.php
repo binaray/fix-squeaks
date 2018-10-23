@@ -115,7 +115,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					// Redirect to login page
 					mysqli_stmt_close($stmt);
 					mysqli_close($link);
-					echo "Successfully registered!\n"
+					echo "Successfully registered!\n";
 					header("location: ../");
 				} else{
 					echo "Something went wrong. Please try again later.";
