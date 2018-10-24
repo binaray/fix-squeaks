@@ -9,6 +9,7 @@ $(document).ready(function () {
 		
 		$.get("ajax/itemDetails?item="+itemId, function(data) {
 			$('.overlay').show();
+			$('.overlay_header').text("Sell: "+data.itemName);
 			$('#input_itemId').val(itemId);
 			if(data.options==null){
 				log("Single item");

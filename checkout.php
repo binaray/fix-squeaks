@@ -1,76 +1,54 @@
 <?php
 session_start();
-if (!isset($_SESSION['email'])){
-	header("location: /");
-}
+// if (!isset($_SESSION['email'])){
+	// header("location: /");
+// }
 
 if(isset($_GET["action"]) && isset($_SESSION["cart"])){
-	require_once "_config.php";
 	
-	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
-	$result = $link->query($sql);
-	while($row = $result->fetch_assoc()) {
-		$userId=$row["userId"];
-	}
-	if (isset($userId)){
+	if($_GET["action"]=="reset"){
+		unset($_SESSION["cart"]);
+		header("");
+	}	
+	else if($_GET["action"]=="purchase"){	
+		require_once "_config.php";
 		
-		$itemsBought = array();
-		
-		foreach ($_SESSION["cart"] as $item){
-			array_push($itemsBought,json_decode($item,true));
+		$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
+		$result = $link->query($sql);
+		while($row = $result->fetch_assoc()) {
+			$userId=$row["userId"];
 		}
-		
-		var_dump($itemsBought);
-		$itemsBought = json_encode($itemsBought);
-		$status = "PENDING";
-		
-		$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
-		if($stmt = mysqli_prepare($link, $sql)){
-			// Bind variables to the prepared statement as parameters
-			mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
+		if (isset($userId)){
 			
-			// Attempt to execute the prepared statement
-			if(mysqli_stmt_execute($stmt)){
-				echo "Successfully added!\n";
-				unset($_SESSION["cart"]);
-			} else{
-				echo "Something went wrong. Please try again later.";
+			$itemsBought = array();
+			
+			foreach ($_SESSION["cart"] as $item){
+				array_push($itemsBought,json_decode($item,true));
 			}
+			
+			var_dump($itemsBought);
+			$itemsBought = json_encode($itemsBought);
+			$status = "PENDING";
+			
+			$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
+			if($stmt = mysqli_prepare($link, $sql)){
+				// Bind variables to the prepared statement as parameters
+				mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
+				
+				// Attempt to execute the prepared statement
+				if(mysqli_stmt_execute($stmt)){
+					echo "Successfully added!\n";
+					unset($_SESSION["cart"]);
+					mysqli_stmt_close($stmt);
+					mysqli_close($link);
+					header("orders?buy=success");
+				} else{
+					echo "Something went wrong. Please try again later.";
+				}
+			}
+			mysqli_stmt_close($stmt);
 		}
-		mysqli_stmt_close($stmt);
-	}
-	mysqli_close($link);
-}
-
-//Shopping cart options
-//---------------------------
-//Reset
-if (isset($_GET['reset'])){
-	if ($_GET["reset"] == 'true'){
-		unset($_SESSION["cart"]); 
-	}
-}
-
-//---------------------------
-//Add
-if (isset($_GET["add"])){
-	$_SESSION["cart"][$i] = $i;
-}
-
-//---------------------------
-//Delete
-if (isset($_GET["delete"])){
-	$i = $_GET["delete"];
-	$qty = $_SESSION["qty"][$i];
-	$qty--;
-	$_SESSION["qty"][$i] = $qty;
-	//remove item if quantity is zero
-	if ($qty == 0){
-		$_SESSION["amounts"][$i] = 0;
-		unset($_SESSION["cart"][$i]);
-	}
-	else{
-		$_SESSION["amounts"][$i] = $amounts[$i] * $qty;
+		mysqli_close($link);
 	}
 }
 ?>
@@ -126,11 +104,19 @@ if (isset($_GET["delete"])){
 				<div class='col-10 text-right'>Grand total:</div>
 				<div class='col-2'>".$grandTotal."</div>
 			</div>";
-			
-		echo '<div class="float-right">
-				<button id="button_reset" type="button" class="btn btn-outline-danger">Clear cart</button>
-				<a id="button_confirmPurchase" type="button" class="btn btn-outline-primary" href="'.htmlspecialchars($_SERVER["PHP_SELF"]).'?action=purchase">Confirm purchase</a>
-			</div>';
+		
+		if (!isset($_SESSION['email'])){
+			echo '<div class="float-right">
+					<a id="button_reset" type="button" class="btn btn-outline-danger" href="'.htmlspecialchars($_SERVER["PHP_SELF"]).'?action=reset">Clear cart</a>
+					<a id="button_confirmPurchase" type="button" class="btn btn-outline-primary" href="logon/register?redirect=/checkout">Confirm order</a>
+				</div>';
+		}
+		else{
+			echo '<div class="float-right">
+					<a id="button_reset" type="button" class="btn btn-outline-danger" href="'.htmlspecialchars($_SERVER["PHP_SELF"]).'?action=reset">Clear cart</a>
+					<a id="button_confirmPurchase" type="button" class="btn btn-outline-primary" href="'.htmlspecialchars($_SERVER["PHP_SELF"]).'?action=purchase">Confirm order</a>
+				</div>';
+		}
 	}
 	else{
 		echo "No items added";

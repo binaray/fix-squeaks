@@ -1,24 +1,50 @@
 <?php
-// if (!isset($_SESSION['email']))
-// {
-	// header("Location: login.php?redirect=sell");
-// }
+require_once "_config.php";
+session_start();
+
+if (!isset($_SESSION['email'])) {
+	header("Location: logon/login.php?redirect=/sell");
+}	
+else{			
+	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
+	$result = $link->query($sql);
+	while($row = $result->fetch_assoc()) {
+		$userId=$row["userId"];
+	}
+}
+if(!isset($userId)) header("Location : logon/register?redirect=/sell");
+
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-	require_once "_config.php";
 	
 	$x=0;
 	$itemId = $_POST["itemId"];
-	$quantity = $_POST["quantity"];
 	$price = $_POST["price"];
+	$quantity = $_POST["quantity"];
 	$properties = array();
-	while(!empty($_POST["type{$x}"])&&!empty($_POST["property{$x}"])){
-		$type = trim($_POST["type{$x}"]);
-		$property = trim($_POST["property{$x}"]);
-		
-		$properties[$type] = $property;
+	while(!empty($_POST["property{$x}"])){
+		//$type = trim($_POST["type{$x}"]);
+		//$property = trim($_POST["property{$x}"]);
+		array_push($properties,trim($_POST["property{$x}"]));
+		//$properties[$type] = $property;
 		$x++;
 	}
+	$properties=json_encode(array_reverse($properties));		
+	
+	$sql = "INSERT INTO Listings (userId, itemId, properties, price, quantity) VALUES (?, ?, ?, ?, ?)";
+	 
+	if($stmt = mysqli_prepare($link, $sql)){
+		// Bind variables to the prepared statement as parameters
+		mysqli_stmt_bind_param($stmt, "sssss", $userId, $itemId, $properties, $price, $quantity);
+		
+		// Attempt to execute the prepared statement
+		if(mysqli_stmt_execute($stmt)){
+			echo "Item successfully listed";
+		} else{
+			echo "Something went wrong. Please try again later.";
+		}
+	}
+	mysqli_stmt_close($stmt);	
 }
 ?>
 
@@ -53,6 +79,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	</div>
 	
 	<div class="container">
+		<?php
+		$sql = "SELECT * FROM Listings WHERE userId = '{$userId}'";
+		$result = $link->query($sql);
+		if($result->num_rows>0) echo "<h3>Listed Items</h3>";
+		while($row = $result->fetch_assoc()) {
+			echo "<div class='row'>".json_encode($row)."</div>";
+		}
+		?>
+		
+		<h3>Add item to sell</h3>
 		<form class="form-inline mx-auto" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
 			<input type="text" class="form-control" placeholder="Enter to search..." name="search" id="searchInput" class="search">
 			<input type="submit" class="btn btn-outline-primary" value="Submit">
@@ -62,8 +98,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		<?php
 		if(isset($_GET["search"])){
 			$search=$_GET["search"];
-			require_once '_config.php';
-			
+
 			$sql="SELECT * FROM Inventory WHERE itemName LIKE '%".$search."%'";	
 			$result = $link->query($sql);
 			while($row = $result->fetch_assoc()) {

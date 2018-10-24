@@ -35,6 +35,7 @@ if (isset($_GET['logout'])){
 					$spinner_html="";
 					$add_description="";
 					
+					//----------------------------------multi item------------------------------------------//
 					if(!empty($row["options"])){
 						$options=json_decode($row["options"],true);
 						$option_count=0;
@@ -71,7 +72,7 @@ if (isset($_GET['logout'])){
 					echo'<div class="row">
 						<div class="col-md-3">
 							<img src="'.$row["imageUrl"].'" alt="'.$row["itemName"].'" width="100%" height="150">
-							<form enctype="multipart/form-data" action="'.htmlspecialchars($_SERVER["PHP_SELF"]).'" method="post">
+							<form>
 								<div id="price">$'.$price.'</div>'
 								.$spinner_html.
 								'<label>Quantity:</label>
@@ -164,20 +165,6 @@ if (isset($_GET['logout'])){
 					echo "0 results";
 				}
 				$link->close();
-				
-				for ($x=0; $x<4; $x++){
-					echo 
-					'<a href="admin/upload" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 filter material">
-						<div class="img-thumbnail item">
-							<img src="https://cdn3.wpbeginner.com/wp-content/uploads/2014/10/broken-img-alt-text.jpg" alt="{$item}" width="100%" height="150">
-							<div class="caption">
-								<div align="center" class="text_item">Test Item</div>
-								<div align="center" class="text_category">Category</div>
-								<div align="center" class="text_price">Price</div>
-							</div>
-						</div>
-					</a>';
-				}
 			}
 		?>
 		</div>

@@ -116,7 +116,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					mysqli_stmt_close($stmt);
 					mysqli_close($link);
 					echo "Successfully registered!\n";
-					header("location: ../");
+					session_start();
+					$_SESSION["email"] = $param_email;
+					if (isset($_GET["redirect"])){
+						header("location: {$_GET["redirect"]}");
+					}
+					else header("location: ../");
 				} else{
 					echo "Something went wrong. Please try again later.";
 				}
@@ -144,36 +149,36 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <div class="container">
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"]; ?>" method="post">
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email"class="form-control" required>
+                <input type="email" name="email"class="form-control" placeholder="Email" required>
             </div>    
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
             </div>
             <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" required>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
             </div>
 			
 			<div class="form-group">
 				<label for="name">Full name</label>
-				<input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
+				<input type="text" name="name" class="form-control" id="name" placeholder="Full name" required>
 				<span class="help-block">Note that name given will be reflected in receipts</span>
             </div>
 			
 			<div class="form-group">
                 <label>Phone number</label>
-                <input type="number" name="phone" class="form-control" required>
+                <input type="number" name="phone" class="form-control" placeholder="Phone number" required>
             </div>
 			
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
                 <input type="reset" class="btn btn-default" value="Reset">
             </div>
-            <p>Already have an account? <a href="login">Login here</a>.</p>
+            <p>Already have an account? <a href="login<?php echo(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"];?>">Login here</a>.</p>
         </form>
     </div>    
 </body>

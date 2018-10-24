@@ -54,9 +54,9 @@ const ITEMS_PER_PAGE=24;
 		  </li>
 		  <li class="nav-item disabled">
 			<div class="nav-link">|</div>
-		  </li>
+		  </li>		  
 		  <li class="nav-item">
-			<a class="nav-link" href="/requests">Requests</a>
+			<a class="nav-link" href="/orders">Orders</a>
 		  </li>
 		  <li class="nav-item">
 			<a class="nav-link" href="/sell">Sell</a>

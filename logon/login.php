@@ -47,7 +47,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION['email'] = $email;
 							mysqli_stmt_close($stmt);
 							mysqli_close($link);
-							header("Location: ../");
+							session_start();
+							if (isset($_GET["redirect"])){
+								header("location: {$_GET["redirect"]}");
+							}
+							else header("location: ../");
                         } else{
                             // Display an error message if password is not valid
                             echo 'The password you entered was not valid.';
@@ -70,3 +74,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     mysqli_close($link);
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <style type="/css/style.css" rel="stylesheet"></style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <h2>Login</h2>
+        <p>Please fill this form to create an account.</p>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"]; ?>" method="post">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email"class="form-control" placeholder="Email" required>
+            </div>    
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+			
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Submit">
+                <input type="reset" class="btn btn-default" value="Reset">
+            </div>
+            <p>Don't have an account? <a href="register<?php echo(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"];?>">Register here</a>.</p>
+        </form>
+    </div>    
+</body>
+</html>

@@ -1,8 +1,21 @@
 <?php
+session_start();
+
 if (!isset($_SESSION['email']))
 {
-	header("Location: login.php?redirect=requests");
+	header("Location: logon/login.php?redirect=/orders");
 }
+
+if (isset($_SESSION['buy'])) echo "Order success!";
+require_once "_config.php";
+
+
+$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
+$result = $link->query($sql);
+while($row = $result->fetch_assoc()) {
+	$userId=$row["userId"];
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,11 +34,37 @@ if (!isset($_SESSION['email']))
 	<?php include "header.php";?>	
   
 	<div class="container">
-		<div class="row">
+		<h3>Orders</h3>
+		<div class='row itemHeader'>
+			<div class='col-2'>Order ID</div>			
+			<div class='col-8'>Items</div>
+			<div class='col-2'>Status</div>
+		</div>
 		
 		<?php
+		if (isset($userId)){
+			$sql = "SELECT * FROM Orders WHERE userId = '{$userId}'";
+			$result = $link->query($sql);
+			while($row = $result->fetch_assoc()) {
+				$itemsBought=json_decode($row["itemsBought"],true);
+				
+				foreach ($itemsBought as &$item){
+					if(isset($item["properties"])){
+						$item["itemName"].=" (";
+						for ($i=0; $i<sizeof($item["properties"]); $i++){
+							if ($i==sizeof($item["properties"])-1) $item["itemName"].=$item["properties"][$i].")";
+							else $item["itemName"].=$item["properties"][$i].", ";
+						}
+					}
+				}
+				echo "<div class='row'>
+							<div class='col-2 orderId'>".$row["orderId"]."</div>
+							<div class='col-8 itemsBought'>".json_encode($itemsBought)."</div>
+							<div class='col-2 itemsBought'>".$row["status"]."</div>
+						</div>";
+			}
+		}
 		?>
-		</div>
 	</div>
 	
 	<?php include "footer.php";?>
