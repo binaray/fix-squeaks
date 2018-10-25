@@ -14,14 +14,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$itemsBought=json_decode($row["itemsBought"],true);
+			$itemName="";
+			$price="";
+			$quantity="";
 			
-			foreach ($itemsBought as &$item){
-				if(isset($item["properties"])){
-					$item["itemName"].=" (";
-					for ($i=0; $i<sizeof($item["properties"]); $i++){
-						if ($i==sizeof($item["properties"])-1) $item["itemName"].=$item["properties"][$i].")";
-						else $item["itemName"].=$item["properties"][$i].", ";
+			for ($j=0; $j<sizeof($itemsBought); $j++){
+				if(isset($itemsBought[$j]["properties"])){
+					$itemsBought[$j]["itemName"].=" (";
+					
+					for ($i=0; $i<sizeof($itemsBought[$j]["properties"]); $i++){
+						if ($i==sizeof($itemsBought[$j]["properties"])-1) $itemsBought[$j]["itemName"].=$itemsBought[$j]["properties"][$i].")";
+						else $itemsBought[$j]["itemName"].=$itemsBought[$j]["properties"][$i]." | ";
 					}
+				}
+				if ($j==sizeof($itemsBought)-1){
+					$itemName.=$itemsBought[$j]["itemName"];
+					$price.=$itemsBought[$j]["price"];
+					$quantity.=$itemsBought[$j]["quantity"];
+				}
+				else{
+					$itemName.=$itemsBought[$j]["itemName"].",";
+					$price.=$itemsBought[$j]["price"].",";
+					$quantity.=$itemsBought[$j]["quantity"].",";
 				}
 			}
 			echo "<div class='row'>
@@ -29,31 +43,39 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						<div class='col-1 userId'>".$row["email"]."</div>
 						<div class='col-8 itemsBought'>".json_encode($itemsBought)."</div>
 					</div>";
+			$name = $row["name"];
+			$email = $row["email"];
 		}
+		$date = date_create();
 		
-		// $api_url="FILLTHIS";
-		// $post_data = json_encode($api_request_array);
+		$data = array(
+			'name' => $name,
+			'email' => "Chester_Tan@mymail.sutd.edu.sg",
+			'itemName' => $itemName,
+			'price' => $price,
+			'quantity' => $quantity,
+			'dateTimeGenerated' => date_timestamp_get($date)
+		 );
+		
+		$jsonEncodedData = json_encode($data);
+		echo $jsonDataEncoded;
+	
+		$ch = curl_init();
 
-		// $ch = curl_init();
-		// curl_setopt($ch, CURLOPT_URL, $api_url);
-		// curl_setopt($ch, CURLOPT_POST, 1);
-		// curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		// curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
-		// curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		// curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-		// curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		$opts = array(
+			CURLOPT_URL             => 'http://hooks.zapier.com/hooks/catch/2321555/e335wh/',
+			CURLOPT_RETURNTRANSFER  => true,
+			CURLOPT_CUSTOMREQUEST   => 'POST',
+			CURLOPT_POST            => 1,
+			CURLOPT_POSTFIELDS      => $jsonEncodedData,
+			CURLOPT_HTTPHEADER  => array('Content-Type: application/json','Content-Length: ' . strlen($jsonEncodedData))                                                                       
+		);
 
-		// $json_response = curl_exec($ch);
-		// //echo $json_response;
+		curl_setopt_array($ch, $opts);
+		$result = curl_exec($ch);
+		curl_close ($ch);
 
-		// if (curl_errno($ch)) {
-			// echo 'Error:' . curl_error($ch);
-		// }
-		// else {
-			// $response = json_decode($json_response);
-		// }
+		echo "\n".$result;
 		
 		$sql = "UPDATE Orders SET status='APPROVED' WHERE orderId={$orderId}";
 		if ($link->query($sql) === TRUE) {
@@ -129,7 +151,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		
 		$(".order_item").click(function(){
 			$(".order_item").removeAttr('style');
-			$(this).css('background-color', 'blue');
+			$(this).css('background-color', '#c3f3f8');
 			selectedOrder = $(this);
 			$(".button_group").show();
 			generateReceipt();
@@ -144,7 +166,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			let orderId = selectedOrder.find('.orderId').text();
 			$("#input_order").val(orderId);
 			log(orderId);
+			<?php 
+			// if (!empty($jsonDataEncoded)){
+			
+			// echo '$.post("http://hooks.zapier.com/hooks/catch/2321555/e335wh/",{item : '.$jsonDataEncoded.'}, function(data){
+				// log(data);
+			// });
+			// ';
+			// }
+			?>
 		}
+		
 		
 	});
 	</script>

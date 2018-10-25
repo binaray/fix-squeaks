@@ -37,6 +37,7 @@ if (isset($_GET['logout'])){
 					
 					//----------------------------------multi item------------------------------------------//
 					if(!empty($row["options"])){
+						$multi_item_disp=true;
 						$options=json_decode($row["options"],true);
 						$option_count=0;
 						
@@ -61,6 +62,7 @@ if (isset($_GET['logout'])){
 					}
 					//----------------------------------single item------------------------------------------//
 					else{
+						$multi_item_disp=false;
 						$item_json = $row["items"];
 						$item = json_decode($row["items"], true);
 						$price = (empty($item["price"])) ? "Price unavailable" : $item["price"];
@@ -80,10 +82,27 @@ if (isset($_GET['logout'])){
 								.$button_order.
 							'</form>
 						</div>';
+												
+					echo '<div class="col-md-9">
+							<ul class="nav nav-tabs" id="profileTabs" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active tab_padding" id="itemDescription-tab" data-toggle="tab" href="#itemDescription" role="tab" aria-controls="itemDescription" aria-selected="true">Description</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link tab_padding" id="userListings-tab" data-toggle="tab" href="#userListings" role="tab" aria-controls="userListings" aria-selected="false">Listings</a>
+								</li>
+							</ul>';
+							
+					echo	'<div class="tab-content mb-5" id="profileTabContent">
+								<div class="tab-pane fade show active" id="itemDescription" role="tabpanel" aria-labelledby="itemDescription-tab"><p>'.$row["description"].'</p>'.$add_description.'</div>
+								<div class="tab-pane fade" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">';
 					
-					echo'<div class="col-md-9">
-							<p>'.$row["description"].'</p>'
-							.$add_description;
+					echo 			'<div class="row">
+										<div class="col"></div>;
+									</div>';
+									
+					echo		'</div>
+							</div>';
 					//close col-9
 					echo "</div>";
 				}
@@ -204,43 +223,41 @@ if (isset($_GET['logout'])){
 	$(document).ready(function () {
 		
 		<?php 
-		if(!isset($option)){
-			echo
-		'
-		let current_item = JSON.parse(\''.$item_json.'\');
-		';
-		}
-		else{
-			echo
-		'let items = JSON.parse(\''.$items_json.'\');
-		let option_count = items[0]["properties"].length-1;
-		let current_item = items[0];
-		
-		$(".input_spinner").change(function() {
-			let count = option_count;
-			let current_property = [];
+		if(isset($multi_item_disp)){
+			if(!$multi_item_disp) echo
+			'
+			let current_item = JSON.parse(\''.$item_json.'\');
+			';
+			else echo
+			'let items = JSON.parse(\''.$items_json.'\');
+			let option_count = items[0]["properties"].length-1;
+			let current_item = items[0];
 			
-			while (count > -1){
-				current_property.push($("#property"+count).find(":selected").text());
-				count--;
-			}
-			log(current_property);
-			
-			let i;
-			for (i = 0; i < items.length; i++){
-				if (items[i]["properties"].equals(current_property)) {
-					current_item = items[i];
-					updateDivs();
-					log(current_item);
+			$(".input_spinner").change(function() {
+				let count = option_count;
+				let current_property = [];
+				
+				while (count > -1){
+					current_property.push($("#property"+count).find(":selected").text());
+					count--;
 				}
-			}
-		});
-		
-		function updateDivs(){
-			$("#price").text(current_item["price"]);
-			$("#input_price").val(current_item["price"]);
-			$("#text_itemDescription").text(current_item["description"]);
-		}';
+				log(current_property);
+				
+				let i;
+				for (i = 0; i < items.length; i++){
+					if (items[i]["properties"].equals(current_property)) {
+						current_item = items[i];
+						updateDivs();
+						log(current_item);
+					}
+				}
+			});
+			
+			function updateDivs(){
+				$("#price").text(current_item["price"]);
+				$("#input_price").val(current_item["price"]);
+				$("#text_itemDescription").text(current_item["description"]);
+			}';
 		}
 		?>
 		

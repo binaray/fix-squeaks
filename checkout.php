@@ -41,7 +41,7 @@ if(isset($_GET["action"]) && isset($_SESSION["cart"])){
 					unset($_SESSION["cart"]);
 					mysqli_stmt_close($stmt);
 					mysqli_close($link);
-					header("orders?buy=success");
+					header("location: orders?buy=success");
 				} else{
 					echo "Something went wrong. Please try again later.";
 				}
