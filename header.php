@@ -122,22 +122,22 @@ if (!isset($_SESSION['email'])){
 				</div>
 			</form>
 		</div>';
-	if(isset($_GET["item"])){
-		echo
-		'<div class="overlay_listing overlay_form">
+}
+if(isset($_GET["item"])){
+	echo'<div class="overlay_listing overlay_form">
 			<h3 id="overlay_header_listing" class="overlay_header">Selected Listing:</h3>
 			<h4 id="overlay_listingProperties"></h4>
 			<form>
 				<p id="overlay_listingPrice"></p>
 				<p id="overlay_listingStock"></p>
-				<input id="input_listingQuantity" type="number" class="form-control" placeholder="Quantity" default=1 step=1 min=1 required>
+				<label>Quantity:</label>
+				<input id="input_listingQuantity" type="number" class="form-control" placeholder="Quantity" value="1" step=1 min=1 required>
 				<div class="form-group">
 					<button id="button_addListingToCart" type="button" class="btn btn-primary">Add Listed item to cart</button>
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
 			</form>
 		</div>';
-	}
 }
 ?>
 </div>

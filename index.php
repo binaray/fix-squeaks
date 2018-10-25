@@ -292,32 +292,41 @@ if (isset($_GET['logout'])){
 			});
 		});
 		
-		var selectedListingId;
+		var selectedListedItem;
 		
 		$(".item_listing").click(function(){
 			$(".overlay").show();
 			$(".overlay_listing").show();
-			selectedListingId = $(this).find(".listingId").text();
 			
+			selectedListedItem = $(this);
 			$("#overlay_header_listing").text("Selected Listing for: "+$("#text_itemName").text());
-			
-			let properties = $(this).find(".listingProperties").text();
-			
-			if (properties) $("#overlay_listingProperties").text(properties);
+									
+			let selectedListedProperties = $(this).find(".listingProperties").text();
+			if (selectedListedProperties) {
+				$("#overlay_listingProperties").text(selectedListedProperties);
+			}
 			$("#overlay_listingPrice").text("Per price: $"+$(this).find(".listingPrice").text());
 			$("#overlay_listingStock").text("Available stock: "+$(this).find(".listingStock").text());
 		});
 		
 		$("#button_addListingToCart").click(function(){
 			let itemToAdd = {
-				listingId : selectedListingId,
+				listingId : selectedListedItem.find(".listingId").text(),
+				itemName : $("#text_itemName").text(),
+				properties : JSON.parse(selectedListedItem.find(".listingProperties").text()),
 				quantity : $("#input_listingQuantity").val(),
+				price : selectedListedItem.find(".listingPrice").text()
 			};
 			log(JSON.stringify(itemToAdd));
-			$.post("ajax/shopping-cart",{item : JSON.stringify(itemToAdd)}, function(data){
+			$.post("ajax/shopping-cart",{listedItem : JSON.stringify(itemToAdd)}, function(data){
 				log(data);
 				alert("Item added to cart!");
 			});
+			// if (confirm('Confirm purchase? Unlike buying from us directly, receipts will not be issued.')) {
+				// alert('Thanks for confirming');
+			// } else {
+				// alert('Why did you press cancel? You should have confirmed');
+			// }
 		});
 	});
 	</script>

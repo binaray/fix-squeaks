@@ -1,8 +1,9 @@
 <?php
 session_start();
-// if (!isset($_SESSION['email'])){
-	// header("location: /");
-// }
+
+if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
+	header("location: /");
+}
 
 require_once "../_config.php";
 
@@ -42,7 +43,7 @@ require_once "../_config.php";
 					<div class='col-8 itemsBought'>".$row["itemsBought"]."</div>
 					<div class='col-2 status'>".$row["status"]."</div>
 				</div>";
-	}	
+	}
 	?>
 		<form enctype="multipart/form-data" action="validate-order" method="post" class="button_group float-right" style="display: none;">
 			<input type="number" id="input_order" name="orderId" style="display: none;" required>

@@ -4,13 +4,13 @@ session_start();
 	// header("location: /");
 // }
 
-if(isset($_GET["action"]) && isset($_SESSION["cart"])){
+if(isset($_GET["action"])){
 	
 	if($_GET["action"]=="reset"){
+		unset($_SESSION["listedCart"]);
 		unset($_SESSION["cart"]);
-		header("");
 	}	
-	else if($_GET["action"]=="purchase"){	
+	if(isset($_SESSION["cart"]) && $_GET["action"]=="purchase"){
 		require_once "_config.php";
 		
 		$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
@@ -51,6 +51,46 @@ if(isset($_GET["action"]) && isset($_SESSION["cart"])){
 		mysqli_close($link);
 	}
 }
+if(isset($_GET["removeListed"])){
+	unset($_SESSION["listedCart"][$_GET["removeListed"]]);
+}
+if(isset($_GET["buyListed"])){
+	//repeated code
+	require_once "_config.php";		
+	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
+	$result = $link->query($sql);
+	while($row = $result->fetch_assoc()) {
+		$userId=$row["userId"];
+	}
+	if (isset($userId)){
+		$sql = "INSERT INTO UserOrders (listingId, buyerId, quantity, status) VALUES (?, ?, ?, ?)";	
+		if($stmt = mysqli_prepare($link, $sql)){
+			// Bind variables to the prepared statement as parameters
+			mysqli_stmt_bind_param($stmt, "ssss", $listingId, $buyerId, $quantity, $status);
+			
+			$listedItem = json_decode($_SESSION["listedCart"][$_GET["buyListed"]],true);
+			
+			$listingId = $listedItem["listingId"];
+			$buyerId = $userId;
+			$quantity = $listedItem["quantity"];
+			$status = "PENDING";
+			
+			// Attempt to execute the prepared statement
+			if(mysqli_stmt_execute($stmt)){
+				echo "Successfully added!\n";
+				unset($_SESSION["cart"]);
+				mysqli_stmt_close($stmt);
+				mysqli_close($link);
+				unset($_SESSION["listedCart"][$_GET["buyListed"]]);
+				header("location: orders?buy=success");
+			} else{
+				echo "Something went wrong. Please try again later.";
+			}
+			mysqli_stmt_close($stmt);
+		}
+	}
+	mysqli_close($link);
+}
 ?>
 
 <!doctype html>
@@ -69,15 +109,50 @@ if(isset($_GET["action"]) && isset($_SESSION["cart"])){
   <body>
 	<div class="container">
 		<h3>Check-out</h3>
+		
+	<?php
+	if (isset($_SESSION["listedCart"])){
+		echo "<h5>Listed Items in Cart</h5>
 		<div class='row itemHeader'>
 			<div class='col-6'>Item</div>
 			<div class='col-2'>Cost</div>
 			<div class='col-2'>Qty</div>
 			<div class='col-2'>Total</div>
-		</div>
-	<?php
-	if (isset($_SESSION["cart"])){
+		</div>";
 		
+		foreach ($_SESSION["listedCart"] as $index => $item){
+			$item = json_decode($item,true);
+			
+			$properties_html="<br>";
+			if (isset($item["properties"])){
+				foreach ($item["properties"] as $property){
+					$properties_html.="<span class='property'>{$property} </span>";
+				}
+			}
+			$total = $item["quantity"]*$item["price"];
+			
+			echo "<div class='row cart_item'>
+						<div class='col-5'>".$item["itemName"].$properties_html."</div>
+						<div class='col-1'>".$item["price"]."</div>
+						<div class='col-1'>".$item["quantity"]."</div>
+						<div class='col-1'>".$total."</div>
+						<div class='col-4 form-inline'>
+							<a type='button' class='btn btn-outline-danger' href='".htmlspecialchars($_SERVER["PHP_SELF"])."?removeListed=".$index."'>Remove order</a>
+							<a type='button' class='btn btn-outline-primary' href='".htmlspecialchars($_SERVER["PHP_SELF"])."?buyListed=".$index."'>Confirm order</a>
+						</div>
+					</div>";
+		}
+		echo "<br>";
+	}
+	
+	if (isset($_SESSION["cart"])){
+		echo "<h5>Retail Items Ordered</h5>
+		<div class='row itemHeader'>
+			<div class='col-6'>Item</div>
+			<div class='col-2'>Cost</div>
+			<div class='col-2'>Qty</div>
+			<div class='col-2'>Total</div>
+		</div>";
 		$grandTotal=0.00;
 		
 		foreach ($_SESSION["cart"] as $item){
@@ -118,7 +193,7 @@ if(isset($_GET["action"]) && isset($_SESSION["cart"])){
 				</div>';
 		}
 	}
-	else{
+	if (!isset($_SESSION["cart"])&&!isset($_SESSION["listedCart"])){
 		echo "No items added";
 	}
 	?>
