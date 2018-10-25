@@ -11,8 +11,7 @@ $(document).ready(function () {
 	});
 	
 	$('.button_cancel').click(function(){
-		$('.overlay_login').hide();
-		$('.overlay_register').hide();
+		$('.overlay').children().hide();
 		$('.overlay').hide();
 	});
 	

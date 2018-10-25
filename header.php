@@ -81,47 +81,63 @@ const ITEMS_PER_PAGE=24;
 	</nav>
 </div>
 
+<div class="fixed-top overlay">
 <?php 
 if (!isset($_SESSION['email'])){
 	echo 
-		'<div class="fixed-top overlay">
-			<div class="overlay_register overlay_form">
-				<h3 class="overlay_header">Register</h3>
-				<form enctype="multipart/form-data" action="logon/register" method="post">
-					<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
-					<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<input type="password" class="form-control" id="input_password" placeholder="Password" required>
-						</div>
-						<div class="form-group col-md-6">
-							<input type="password" class="form-control" id="input_password_confirm" name="password" placeholder="Confirm Password" required>
-						</div>
-						</div>
-					<div class="input-group">
-						<div class="input-group-prepend">
-						  <span class="input-group-text" id="validationTooltipUsernamePrepend">65</span>
-						</div>
-						<input type="tel" class="form-control" id="validationTooltipUsername" name="phone" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
+		'<div class="overlay_register overlay_form">
+			<h3 class="overlay_header">Register</h3>
+			<form enctype="multipart/form-data" action="logon/register" method="post">
+				<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
+				<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<input type="password" class="form-control" id="input_password" placeholder="Password" required>
 					</div>
-					<div class="form-group">
-						<input type="submit" class="btn btn-primary" value="Submit">
-						<input type="reset" class="btn btn-default button_cancel" value="Cancel">
+					<div class="form-group col-md-6">
+						<input type="password" class="form-control" id="input_password_confirm" name="password" placeholder="Confirm Password" required>
 					</div>
-				</form>
-			</div>
-			
-			<div class="overlay_login overlay_form">
-				<h3 class="overlay_header">Login</h3>
-				<form enctype="multipart/form-data" action="logon/login" method="post">
-					<input type="text" name="email" class="form-control" placeholder="Email" required>
-					<input type="password" name="password" class="form-control" placeholder="Password" required>
-					<div class="form-group">
-						<input type="submit" class="btn btn-primary" value="Submit">
-						<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 					</div>
-				</form>
-			</div>
+				<div class="input-group">
+					<div class="input-group-prepend">
+					  <span class="input-group-text" id="validationTooltipUsernamePrepend">65</span>
+					</div>
+					<input type="tel" class="form-control" id="validationTooltipUsername" name="phone" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
+				</div>
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary" value="Submit">
+					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
+				</div>
+			</form>
+		</div>
+		
+		<div class="overlay_login overlay_form">
+			<h3 class="overlay_header">Login</h3>
+			<form enctype="multipart/form-data" action="logon/login" method="post">
+				<input type="text" name="email" class="form-control" placeholder="Email" required>
+				<input type="password" name="password" class="form-control" placeholder="Password" required>
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary" value="Submit">
+					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
+				</div>
+			</form>
 		</div>';
+	if(isset($_GET["item"])){
+		echo
+		'<div class="overlay_listing overlay_form">
+			<h3 id="overlay_header_listing" class="overlay_header">Selected Listing:</h3>
+			<h4 id="overlay_listingProperties"></h4>
+			<form>
+				<p id="overlay_listingPrice"></p>
+				<p id="overlay_listingStock"></p>
+				<input id="input_listingQuantity" type="number" class="form-control" placeholder="Quantity" default=1 step=1 min=1 required>
+				<div class="form-group">
+					<button id="button_addListingToCart" type="button" class="btn btn-primary">Add Listed item to cart</button>
+					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
+				</div>
+			</form>
+		</div>';
+	}
 }
 ?>
+</div>

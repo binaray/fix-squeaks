@@ -3,7 +3,7 @@ require_once "_config.php";
 session_start();
 
 if (!isset($_SESSION['email'])) {
-	header("Location: logon/login.php?redirect=/sell");
+	header("location: logon/login.php?redirect=/sell");
 }	
 else{			
 	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
@@ -12,8 +12,6 @@ else{
 		$userId=$row["userId"];
 	}
 }
-if(!isset($userId)) header("Location : logon/register?redirect=/sell");
-
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	
@@ -23,10 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$quantity = $_POST["quantity"];
 	$properties = array();
 	while(!empty($_POST["property{$x}"])){
-		//$type = trim($_POST["type{$x}"]);
-		//$property = trim($_POST["property{$x}"]);
 		array_push($properties,trim($_POST["property{$x}"]));
-		//$properties[$type] = $property;
 		$x++;
 	}
 	$properties=json_encode(array_reverse($properties));		

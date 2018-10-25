@@ -27,22 +27,34 @@ if (isset($_GET['logout'])){
 		<div class="row">
 		<?php
 			if(isset($_GET["item"])){
-				$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
-				$result = $link->query($sql);
-				while($row = $result->fetch_assoc()) {
-					if ($result->num_rows== 0) echo "No such item!";
-					
-					$spinner_html="";
-					$add_description="";
+				if (!is_numeric($_GET["item"])) {
+					echo "Invalid Item!";	
+				}
+				else{
+					$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
+					$result = $link->query($sql);
+					while($row = $result->fetch_assoc()) {
+						if ($result->num_rows== 0) echo "No such item!";
+						
+						$spinner_html="";
+						$add_description="";
+						
+						$itemName = $row["itemName"];
+						$imageUrl = $row["imageUrl"];
+						$description = $row["description"];
+						$options = $row["options"];
+						$items_json = $row["items"];
+						$items = json_decode($items_json, true);
+					}
 					
 					//----------------------------------multi item------------------------------------------//
-					if(!empty($row["options"])){
+					if(!empty($options)){
 						$multi_item_disp=true;
-						$options=json_decode($row["options"],true);
+						$options=json_decode($options,true);
 						$option_count=0;
 						
 						foreach ($options as $option => $properties){
-							$spinner_html.='<label>'.$option.'</label>
+							$spinner_html.='<label id="label_type'.$option_count.'">'.$option.'</label>
 							<input name="type'.$option_count.'" style="display: none; value="'.$option.'">
 							<select id="property'.$option_count.'" name="property'.$option_count.'" class="form-control input_spinner">';
 							
@@ -52,30 +64,25 @@ if (isset($_GET['logout'])){
 							$spinner_html.='</select>';
 							$option_count++;
 						}
-						
-						$items_json = $row["items"];
-						$items = json_decode($row["items"], true);
-						
-						$price = (empty($items[0]["price"])) ? "Price unavailable" : $items[0]["price"];
+																	
+						$price = (empty($items[0]["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items[0]["price"],2);
 						$add_description = "<div id='text_itemDescription'>".$items[0]["description"]."</div>";
 						$button_order = ($items[0]["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
 					}
 					//----------------------------------single item------------------------------------------//
 					else{
 						$multi_item_disp=false;
-						$item_json = $row["items"];
-						$item = json_decode($row["items"], true);
-						$price = (empty($item["price"])) ? "Price unavailable" : $item["price"];
-						$button_order = ($item["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
+						$price = (empty($items["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items["price"],2);
+						$button_order = ($items["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
 					}
 					
-					echo '<h3 id="text_itemName">'.$row["itemName"].'</h3></div>';
-					
-					echo'<div class="row">
+					//----------------------------------------display item--------------------------------------------------------
+					echo '<h3 id="text_itemName">'.$itemName.'</h3></div>
+						<div class="row">
 						<div class="col-md-3">
-							<img src="'.$row["imageUrl"].'" alt="'.$row["itemName"].'" width="100%" height="150">
+							<img src="'.$imageUrl.'" alt="'.$itemName.'" width="100%" height="150">
 							<form>
-								<div id="price">$'.$price.'</div>'
+								<div id="price">'.$price.'</div>'
 								.$spinner_html.
 								'<label>Quantity:</label>
 								<input type="number" class="form-control" id="input_quantity" placeholder="Quantity" value="1" min="1" required>'
@@ -94,13 +101,24 @@ if (isset($_GET['logout'])){
 							</ul>';
 							
 					echo	'<div class="tab-content mb-5" id="profileTabContent">
-								<div class="tab-pane fade show active" id="itemDescription" role="tabpanel" aria-labelledby="itemDescription-tab"><p>'.$row["description"].'</p>'.$add_description.'</div>
+								<div class="tab-pane fade show active" id="itemDescription" role="tabpanel" aria-labelledby="itemDescription-tab"><p>'.$description.'</p>'.$add_description.'</div>
 								<div class="tab-pane fade" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">';
 					
-					echo 			'<div class="row">
-										<div class="col"></div>;
+					
+					//----------------------------------Pull user listings------------------------------------//
+					$sql="SELECT * FROM Listings WHERE itemId = {$_GET["item"]} ORDER BY price";
+					$result = $link->query($sql);
+					
+					echo '<div class="row">
+							<div class="col-2 header_listing">Listing ID</div><div class="col-6">Type</div><div class="col-2">Price</div><div class="col-2">Stock</div>
+						</div>';
+					while($row = $result->fetch_assoc()) {
+						if ($result->num_rows== 0) echo "No listings yet!";						
+						echo		'<div class="row item_listing">
+										<div class="col-2 listingId">'.$row["listingId"].'</div><div class="col-6 listingProperties">'.$row["properties"].'</div><div class="col-2 listingPrice">'.$row["price"].'</div><div class="col-2 listingStock">'.$row["quantity"].'</div>
 									</div>';
-									
+						
+					}				
 					echo		'</div>
 							</div>';
 					//close col-9
@@ -114,18 +132,18 @@ if (isset($_GET['logout'])){
 					$offset=$_GET["page"]*ITEMS_PER_PAGE;
 					if(isset($_GET["category"])){
 						$category = $_GET["category"];
-						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+						$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
 					}
 					else
-						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+						$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
 				}
 				else{
 					if(isset($_GET["category"])){
 						$category = $_GET["category"];
-						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24";
+						$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24";
 					}
 					else
-						$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT 24";
+						$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 24";
 				}
 				
 				$result = $link->query($sql);
@@ -139,7 +157,7 @@ if (isset($_GET['logout'])){
 						//single item type
 						if(empty($row["options"])){
 							$item = json_decode($row["items"], true);
-							$price = (empty($item["price"])) ? "Price unavailable" : "$".$item["price"];
+							$price = (empty($item["price"])) ? "Price unavailable" : "$".number_format($item["price"],2);
 							
 							echo 
 								'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
@@ -147,7 +165,6 @@ if (isset($_GET['logout'])){
 										<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 										<div class="caption">
 											<div align="center" class="text_item">'.$row["itemName"].'</div>
-											<div align="center" class="text_category">'.$row["category"].'</div>
 											<div align="center" class="text_price">'.$price.'</div>
 										</div>
 									</div>
@@ -165,7 +182,7 @@ if (isset($_GET['logout'])){
 								$count++;
 							}
 							$avg_price /= $count;
-							$avg_price = (empty($avg_price)) ? "Price unavailable" : "$".$avg_price;
+							$avg_price = (empty($avg_price)) ? "Price unavailable" : "$".number_format($avg_price,2);
 							
 							echo 
 								'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
@@ -173,7 +190,6 @@ if (isset($_GET['logout'])){
 										<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 										<div class="caption">
 											<div align="center" class="text_item">'.$row["itemName"].'</div>
-											<div align="center" class="text_category">'.$row["category"].'</div>
 											<div align="center" class="text_price">'.$avg_price.'</div>
 										</div>
 									</div>
@@ -194,7 +210,6 @@ if (isset($_GET['logout'])){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
-	<script src="js/logon.js"></script>
 	<script type="text/javascript">
 	'use strict'
 	let log = console.log.bind(console);
@@ -226,7 +241,7 @@ if (isset($_GET['logout'])){
 		if(isset($multi_item_disp)){
 			if(!$multi_item_disp) echo
 			'
-			let current_item = JSON.parse(\''.$item_json.'\');
+			let current_item = JSON.parse(\''.$items_json.'\');
 			';
 			else echo
 			'let items = JSON.parse(\''.$items_json.'\');
@@ -273,10 +288,39 @@ if (isset($_GET['logout'])){
 			log(JSON.stringify(itemToAdd));
 			$.post("ajax/shopping-cart",{item : JSON.stringify(itemToAdd)}, function(data){
 				log(data);
+				alert("Item added to cart!");
+			});
+		});
+		
+		var selectedListingId;
+		
+		$(".item_listing").click(function(){
+			$(".overlay").show();
+			$(".overlay_listing").show();
+			selectedListingId = $(this).find(".listingId").text();
+			
+			$("#overlay_header_listing").text("Selected Listing for: "+$("#text_itemName").text());
+			
+			let properties = $(this).find(".listingProperties").text();
+			
+			if (properties) $("#overlay_listingProperties").text(properties);
+			$("#overlay_listingPrice").text("Per price: $"+$(this).find(".listingPrice").text());
+			$("#overlay_listingStock").text("Available stock: "+$(this).find(".listingStock").text());
+		});
+		
+		$("#button_addListingToCart").click(function(){
+			let itemToAdd = {
+				listingId : selectedListingId,
+				quantity : $("#input_listingQuantity").val(),
+			};
+			log(JSON.stringify(itemToAdd));
+			$.post("ajax/shopping-cart",{item : JSON.stringify(itemToAdd)}, function(data){
+				log(data);
+				alert("Item added to cart!");
 			});
 		});
 	});
-
 	</script>
+	<script src="js/logon.js"></script>
   </body>
 </html>
