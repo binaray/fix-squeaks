@@ -3,18 +3,18 @@ if(isset($_GET["page"])){
 	$offset=$_GET["page"]*ITEMS_PER_PAGE;
 	if(isset($_GET["category"])){
 		$category = $_GET["category"];
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 	}
 	else
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 24 OFFSET {$offset}";
+		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 }
 else{
 	if(isset($_GET["category"])){
 		$category = $_GET["category"];
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT 24";
+		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
 	}
 	else
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 24";
+		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
 }
 
 $result = $link->query($sql);

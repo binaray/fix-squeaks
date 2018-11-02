@@ -35,11 +35,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						$imageUrl = trim($row[2]);
 						$category = trim(strtolower($row[3]));
 						$price = trim($row[4]);
-						$availability = trim($row[5]);
+						$quantity = trim($row[5]);
 						
 						$item=json_encode(array(
 							'price' => $price,
-							'availability' => $availability
+							'quantity' => $quantity
 						));
 						
 						// Attempt to execute the prepared statement
@@ -70,18 +70,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				
 				$x=0;
 				$options_multi=array();
-				while(!empty($_POST["options{$x}"])&&!empty($_POST["type{$x}"])){
+				while(!empty($_POST["options{$x}"]) && !empty($_POST["type{$x}"])){
+					$dict=array();
 					$options = str_getcsv($_POST["options{$x}"]);
 					$type = $_POST["type{$x}"];
 					
-					$options_multi[$type] = array();
+					$dict[$type] = array();
+					// $options_multi[$type] = array();
 					foreach($options as $option){
-						array_push($options_multi[$type],trim($option));
+						array_push($dict[$type],trim($option));
 					}
-					//$options_multi[$type][] = $options;
+					array_push($options_multi,$dict);
 					$x++;
 				}
 				$options_multi=json_encode($options_multi);
+				// echo $options_multi;
 				
 				$items_multi=array();
 				$data = str_getcsv($_POST["items"], "\n"); //parse the rows
@@ -96,14 +99,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$addDescription = trim($row[0]);
 					$imageUrl = trim($row[1]);
 					$price = trim($row[2]);
-					$availability = trim($row[3]);
+					$quantity = trim($row[3]);
 					
 					$item=array(
 						'properties' => $properties,
 						'description' => $addDescription,
 						'imageUrl' => $imageUrl,
 						'price' => $price,
-						'availability' => $availability
+						'quantity' => $quantity
 					);
 					array_push($items_multi,$item);
 				}
@@ -143,10 +146,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		<form id="itemSingle" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=single"?>" method="post">
 			<h5>csv upload (for single items)</h5>
 			<p>Input format:<br>
-			itemName0, description0, imageUrl0, category0, price0, availability0<br>
-			itemName1, description1, imageUrl1, category1, price1, availability1
+			itemName0, description0, imageUrl0, category0, price0, quantity0<br>
+			itemName1, description1, imageUrl1, category1, price1, quantity1<br>
+			(for quantity: 0 if out of stock, -1 if unavailable)
 			</p>
-			<textarea rows="4" cols="100%" form="itemSingle" name="csvString" placeholder="itemName, description, imageUrl, category, price, availability..." required></textarea>
+			<textarea rows="4" cols="100%" form="itemSingle" name="csvString" placeholder="itemName, description, imageUrl, category, price, quantity..." required></textarea>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">
 			</div>
@@ -169,12 +173,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			<button id="button_addOption" type="button" class="btn btn-outline-danger">Add new option</button>
 			<button id="button_deleteOption" type="button" class="btn btn-outline-danger">Delete option</button>
 			<p>Input format:<br>
-			description, imageUrl, price, availability<br>
-			description, imageUrl, price, availability
+			description, imageUrl, price, quantity<br>
+			description, imageUrl, price, quantity<br>
+			(for quantity: 0 if out of stock, -1 if unavailable)
 			</p>
 			<div id="items" class="form-group form-row">
 				<textarea id='itemsHelp' class="form-control col-3" rows="4" cols="100%" form="itemGroup" name="propertyCombination" placeholder="options" readonly required></textarea>
-				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, availability" required></textarea>
+				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, quantity" required></textarea>
 			</div>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">

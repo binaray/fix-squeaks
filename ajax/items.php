@@ -1,14 +1,19 @@
 <?php
 //USAGE: Returns -all- items in json format
-//GET PARAMETERS (OPTIONAL): category
+const ITEMS_PER_PAGE = 5;
 require_once "../_config.php";
 
-if(isset($_GET["category"]))
-	$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC";
+if(isset($_GET["category"])){
+	if(isset($_GET["page"])){
+		$offset=$_GET["page"]*ITEMS_PER_PAGE;
+		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
+	}
+	$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
+}
 else if(isset($_GET["item"]))
 	$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
 else
-	$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC";
+	$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
 
 $result = $link->query($sql);
 if ($result->num_rows > 0) {
