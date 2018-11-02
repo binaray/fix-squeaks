@@ -8,7 +8,9 @@ if(isset($_GET["category"])){
 		$offset=$_GET["page"]*ITEMS_PER_PAGE;
 		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 	}
-	$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
+	else{
+		$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
+	}
 }
 else if(isset($_GET["item"]))
 	$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
