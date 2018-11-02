@@ -6,7 +6,7 @@ require_once "../_config.php";
 if(isset($_GET["category"])){
 	if(isset($_GET["page"])){
 		$offset=$_GET["page"]*ITEMS_PER_PAGE;
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
+		$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 	}
 	else{
 		$sql="SELECT itemId, itemName, imageUrl, options, items, category FROM Inventory WHERE category='{$_GET["category"]}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
