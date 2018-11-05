@@ -5,6 +5,8 @@ session_start();
 	// header("location: ../index.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+	$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp'); // valid extensions
+	$path = '../assets/uploads/images'; // upload directory
 	
 	if(isset($_GET["upload"])){
 		
@@ -86,7 +88,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$options_multi=json_encode($options_multi);
 				// echo $options_multi;
 				
-				$items_multi=array();
+				$items_multi=array();	//array to prepare json result
+				$items=array();	//array to store items
 				$data = str_getcsv($_POST["items"], "\n"); //parse the rows
 				$property_combination = str_getcsv($_POST["propertyCombination"], "\n");
 				
@@ -95,24 +98,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$properties = str_getcsv($property_combination[$i]);
 					$empty = array_shift($properties);
 					$properties = array_map('trim', $properties);
+					$properties = json_encode($properties);
 					
 					$addDescription = trim($row[0]);
 					$imageUrl = trim($row[1]);
 					$price = trim($row[2]);
 					$quantity = trim($row[3]);
 					
-					$item=array(
-						'properties' => $properties,
+					$items[$properties]=array(
 						'description' => $addDescription,
 						'imageUrl' => $imageUrl,
 						'price' => $price,
 						'quantity' => $quantity
 					);
-					array_push($items_multi,$item);
 				}
 				
+				array_push($items_multi,$items);
 				$items_multi=json_encode($items_multi);
-				
+				echo $items_multi;
 				// Attempt to execute the prepared statement
 				if(mysqli_stmt_execute($stmt)){
 					echo "Successfully added multi-item!";

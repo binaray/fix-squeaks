@@ -25,16 +25,32 @@ else{
 		$options=json_decode($options,true);
 		$option_count=0;
 		
-		foreach ($options as $option => $properties){
-			$spinner_html.='<label id="label_type'.$option_count.'">'.$option.'</label>
-			<input name="type'.$option_count.'" style="display: none; value="'.$option.'">
-			<select id="property'.$option_count.'" name="property'.$option_count.'" class="form-control input_spinner">';
+		// for($i=0; $i<count($option); $i++){
 			
-			foreach ($properties as &$selection){
-				$spinner_html.='<option>'.$selection.'</option>';
-			}	
-			$spinner_html.='</select>';
-			$option_count++;
+		// }
+		// foreach ($options as $option => $properties){
+			// $spinner_html.='<label id="label_type'.$option_count.'">'.$option.'</label>
+			// <input name="type'.$option_count.'" style="display: none; value="'.$option.'">
+			// <select id="property'.$option_count.'" name="property'.$option_count.'" class="form-control input_spinner">';
+			
+			// foreach ($properties as &$selection){
+				// $spinner_html.='<option>'.$selection.'</option>';
+			// }	
+			// $spinner_html.='</select>';
+			// $option_count++;
+		// }
+		
+		foreach ($options as $index => $option){
+			foreach ($option as $option_name => $property){
+				$spinner_html.='<label id="label_type'.$index.'">'.$option_name.'</label>
+				<input name="type'.$index.'" style="display: none; value="'.$option_name.'">
+				<select id="property'.$index.'" name="property'.$index.'" class="form-control input_spinner">';
+				
+				foreach ($property as $selection){
+					$spinner_html.='<option>'.$selection.'</option>';
+				}	
+				$spinner_html.='</select>';
+			}
 		}
 													
 		$price = (empty($items[0]["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items[0]["price"],2);
