@@ -70,7 +70,7 @@ else{
 	<div class="row"><h3 id="text_itemName"><?=$itemName;?></h3></div>
 	<div class="row">
 		<div class="col-md-3">
-			<img src="<?=$imageUrl;?>" alt="<?=$itemName;?>" width="100%" height="150">
+			<img src="image?upload=<?=$imageUrl;?>" alt="<?=$itemName;?>" width="100%" height="150">
 			<form>
 				<div id="price"><?=$price?></div>
 				<?=$spinner_html;?>

@@ -115,7 +115,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				
 				array_push($items_multi,$items);
 				$items_multi=json_encode($items_multi);
-				echo $items_multi;
+				
 				// Attempt to execute the prepared statement
 				if(mysqli_stmt_execute($stmt)){
 					echo "Successfully added multi-item!";

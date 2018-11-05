@@ -27,7 +27,7 @@ $result = $link->query($sql);
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
 			
-			$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
+			$imageUrl = $row["imageUrl"];
 			
 			//single item type
 			if(empty($row["options"])){
@@ -37,7 +37,7 @@ $result = $link->query($sql);
 				echo 
 					'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 						<div class="img-thumbnail item">
-							<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 							<div class="caption">
 								<div align="center" class="text_item">'.$row["itemName"].'</div>
 								<div align="center" class="text_price">'.$price.'</div>
@@ -62,7 +62,7 @@ $result = $link->query($sql);
 				echo 
 					'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 						<div class="img-thumbnail item">
-							<img src="'.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 							<div class="caption">
 								<div align="center" class="text_item">'.$row["itemName"].'</div>
 								<div align="center" class="text_price">'.$avg_price.'</div>
