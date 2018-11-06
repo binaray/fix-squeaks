@@ -80,15 +80,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				}
 			}
 			mysqli_stmt_close($stmt);
-
-			$param_telegramId = trim($_GET["telegramId"]);
-			$sql = "UPDATE Users SET email='{$param_email}', password='{$param_password}', name='{$param_name}', phone={$param_phone} WHERE userId={$stored_userId}";
 			
-			if(mysqli_query($link, $sql)){
-				$overlay_message = "Registration successfull. You may close this window.";
-			} else {
-				$overlay_message = "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+			if (empty($stored_email)){
+				$param_telegramId = trim($_GET["telegramId"]);
+				$sql = "UPDATE Users SET email='{$param_email}', password='{$param_password}', name='{$param_name}', phone={$param_phone} WHERE userId={$stored_userId}";
+				
+				if(mysqli_query($link, $sql)){
+					$overlay_message = "Registration successfull. You may close this window.";
+				} else {
+					$overlay_message = "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+				}
 			}
+			else $overlay_message = "This telegram id is already registered to an account!";
 		}
 		
 		//default register

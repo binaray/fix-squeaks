@@ -1,7 +1,7 @@
 <?php
 session_start();
 //Check admin email here
-require_once "../_config.php";
+require_once "../../_config.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$orderId=$_POST["orderId"];
