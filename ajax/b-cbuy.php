@@ -13,7 +13,6 @@ $sql = "SELECT userId, email FROM Users WHERE telegramId = {$telegramId}";
 $result = $link->query($sql);
 
 if ($result->num_rows == 0) {
-	echo "creating new user";
 	//create new user with only telegramId
 	$param_telegramId = $telegramId;
 	$sql = "INSERT INTO Users (telegramId) VALUES (?)";		
@@ -28,8 +27,8 @@ else {
 		$userId = $row["userId"];
 		$email = $row["email"];
 		if (empty($email)){
-			$additional_result_text .= "To receive receipts you need to complete registration at the link below. Once your order has been processed, the receipt will be emailed to you. \n"
-			.'<a href="../logon/register?telegramId='.$telegramId.'">Register your account here</a>';
+			$additional_result_text .= "To receive receipts you need to complete registration from the link below. Once your order has been processed, the receipt will be emailed to you. \n"
+			.getenv('HTTP_HOST').'/logon/register?telegramId='.$telegramId;
 		}
 	}
 }
