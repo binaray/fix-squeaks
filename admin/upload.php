@@ -111,7 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						'quantity' => $quantity
 					);
 				}
-				$items json_encode($items);
+				$items = json_encode($items);
 				
 				// Attempt to execute the prepared statement
 				if(mysqli_stmt_execute($stmt)){
