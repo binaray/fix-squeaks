@@ -61,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			
 			if($stmt = mysqli_prepare($link, $sql)){
 				// Bind variables to the prepared statement as parameters
-				mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $defImageUrl, $options_multi, $items_multi, $category);
+				mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $defImageUrl, $options_multi, $items, $category);
 				
 				$itemGen = str_getcsv($_POST["item"]);	//general item details
 				// Set parameters
@@ -88,7 +88,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$options_multi=json_encode($options_multi);
 				// echo $options_multi;
 				
-				$items_multi=array();	//array to prepare json result
 				$items=array();	//array to store items
 				$data = str_getcsv($_POST["items"], "\n"); //parse the rows
 				$property_combination = str_getcsv($_POST["propertyCombination"], "\n");
@@ -112,9 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						'quantity' => $quantity
 					);
 				}
-				
-				array_push($items_multi,$items);
-				$items_multi=json_encode($items_multi);
+				$items json_encode($items);
 				
 				// Attempt to execute the prepared statement
 				if(mysqli_stmt_execute($stmt)){
