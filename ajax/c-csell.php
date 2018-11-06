@@ -10,22 +10,7 @@ $price = $_GET["price"];
 $quantity = $_GET["quantity"];
 $telegramId = $_GET["telegramId"];
 
-$sql = "SELECT userId FROM Users WHERE telegramId = ?";
-
-if($stmt = mysqli_prepare($link, $sql)){
-	mysqli_stmt_bind_param($stmt, "s", $param_telegramIdUnchecked);
-	$param_telegramIdUnchecked = $telegramId;
-	if(mysqli_stmt_execute($stmt)){
-		
-		mysqli_stmt_bind_result($stmt, $result_userId);
-		while (mysqli_stmt_fetch($stmt)) {
-			$userId = $result_userId;
-		}
-	} else{
-		$overlay_message = "Oops! Something went wrong. Please try again later.";
-	}
-	mysqli_stmt_close($stmt);
-}
+require_once "telegramcheck.php";
 
 if (isset($userId)){
 	$sql = "INSERT INTO Listings (userId, itemId, properties, price, quantity) VALUES (?, ?, ?, ?, ?)";

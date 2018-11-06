@@ -1,9 +1,9 @@
 <?php
-session_start();
+// session_start();
 
-if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
-	header("location: /");
-}
+// if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
+	// header("location: /");
+// }
 
 require_once "../_config.php";
 
@@ -45,7 +45,7 @@ require_once "../_config.php";
 				</div>";
 	}
 	?>
-		<form enctype="multipart/form-data" action="validate-order" method="post" class="button_group float-right" style="display: none;">
+		<form enctype="multipart/form-data" action="ajax/validate-order" method="post" class="button_group float-right" style="display: none;">
 			<input type="number" id="input_order" name="orderId" style="display: none;" required>
 			<input type="submit" class="btn btn-outline-danger" value="Reject order" name="reject">
 			<input type="submit" class="btn btn-outline-primary" value="Issue receipt" name="issue">
