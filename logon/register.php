@@ -62,48 +62,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		
 		//if registering from telegram
 		if(isset($_GET["telegramId"])){
-			// Prepare a select statement
-			$sql = "SELECT userId FROM Users WHERE telegramId = ?";
+			$sql = "SELECT userId, email FROM Users WHERE telegramId = ?";
 
 			if($stmt = mysqli_prepare($link, $sql)){
 				mysqli_stmt_bind_param($stmt, "s", $param_telegramIdUnchecked);
 				$param_telegramIdUnchecked = trim($_GET["telegramId"]);
-				
-				// Attempt to execute the prepared statement
 				if(mysqli_stmt_execute($stmt)){
-					mysqli_stmt_store_result($stmt);
 					
-					if(mysqli_stmt_num_rows($stmt) == 1){
-						echo "This telegram ID is already linked to an account!";
+					mysqli_stmt_bind_result($stmt, $result_userId, $result_email);
 					
-					} else{
-						
-						$param_telegramId = trim($_GET["telegramId"]);
-						
-						$sql = "INSERT INTO Users (email, password, name, phone, telegramId) VALUES (?, ?, ?, ?, ?)";						
-						if($stmt = mysqli_prepare($link, $sql)){
-							// Bind variables to the prepared statement as parameters
-							mysqli_stmt_bind_param($stmt, "sssis", $param_email, $param_password, $param_name, $param_phone, $param_telegramId);
-							
-							// Attempt to execute the prepared statement
-							if(mysqli_stmt_execute($stmt)){
-								// Redirect to login page?
-								mysqli_stmt_close($stmt);
-								mysqli_close($link);
-								echo "Registration successful! Close your browser or visit our <a href='../'>main page here</a>!";
-							} else{
-								echo "Something went wrong. Please try again later.";
-							}
-						}
-						mysqli_stmt_close($stmt);
+					while (mysqli_stmt_fetch($stmt)) {
+						$stored_userId = $result_userId;
+						$stored_email = $result_email;
 					}
 				} else{
-					echo "Oops! Something went wrong. Please try again later.";
+					$overlay_message = "Oops! Something went wrong. Please try again later.";
 				}
 			}
-			// Close statement
-			mysqli_stmt_close($stmt);	
-		} else{
+			mysqli_stmt_close($stmt);
+
+			$param_telegramId = trim($_GET["telegramId"]);
+			$sql = "UPDATE Users SET email='{$param_email}', password='{$param_password}', name='{$param_name}', phone={$param_phone} WHERE userId={$stored_userId}";
+			
+			if(mysqli_query($link, $sql)){
+				$overlay_message = "Registration successfull. You may close this window.";
+			} else {
+				$overlay_message = "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+			}
+		}
+		
+		//default register
+		else{
 			$sql = "INSERT INTO Users (email, password, name, phone) VALUES (?, ?, ?, ?)";
 			 
 			if($stmt = mysqli_prepare($link, $sql)){
@@ -115,23 +104,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 					// Redirect to login page
 					mysqli_stmt_close($stmt);
 					mysqli_close($link);
-					echo "Successfully registered!\n";
+					$overlay_message = "Successfully registered!\n";
 					session_start();
 					$_SESSION["email"] = $param_email;
-					if (isset($_GET["redirect"])){
-						header("location: {$_GET["redirect"]}");
-					}
-					else header("location: ../");
+					header("location: ../");
 				} else{
-					echo "Something went wrong. Please try again later.";
+					$overlay_message = "Something went wrong. Please try again later.";
 				}
 			}
 			mysqli_stmt_close($stmt);
 		}
     }
     mysqli_close($link);
-}else{
-	//show register page
 }
 ?>
 
@@ -143,13 +127,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <style type="/css/style.css" rel="stylesheet"></style>
+    <link rel="stylesheet" href="../css/pipsqueaks.css">
 </head>
 <body class="bg-light">
+	<?php 
+	if(isset($overlay_message)) 
+		echo'
+		<div class="fixed-top overlay" style="display: block;">
+			<div class="overlay_form">
+				<p>'.$overlay_message.'</p>
+			</div>
+		</div>';
+	?>
+
     <div class="container">
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"]; ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).(empty($_GET["telegramId"])) ? "" : "?telegramId=".$_GET["telegramId"]; ?>" method="post">
             <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="email"class="form-control" placeholder="Email" required>
@@ -166,7 +160,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			<div class="form-group">
 				<label for="name">Full name</label>
 				<input type="text" name="name" class="form-control" id="name" placeholder="Full name" required>
-				<span class="help-block">Note that name given will be reflected in receipts</span>
+				<span class="help-block">*Note that name given will be reflected in receipts</span>
             </div>
 			
 			<div class="form-group">
