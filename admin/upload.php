@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$failures = 0;
 			
 			foreach($data as &$row) {
-				$row = str_getcsv($row); //parse the items in rows 
+				$row = str_getcsv($row, "|"); //parse the items in rows 
 				if (!empty($row[0])){
 					
 					// Prepare an insert statement
@@ -63,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				// Bind variables to the prepared statement as parameters
 				mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $defImageUrl, $options_multi, $items, $category);
 				
-				$itemGen = str_getcsv($_POST["item"]);	//general item details
+				$itemGen = str_getcsv($_POST["item"], "|");	//general item details
 				// Set parameters
 				$itemName = trim($itemGen[0]);
 				$description = trim($itemGen[1]);
@@ -74,7 +74,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$options_multi=array();
 				while(!empty($_POST["options{$x}"]) && !empty($_POST["type{$x}"])){
 					$dict=array();
-					$options = str_getcsv($_POST["options{$x}"]);
+					$options = str_getcsv($_POST["options{$x}"], ",");
 					$type = $_POST["type{$x}"];
 					
 					$dict[$type] = array();
@@ -93,7 +93,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				$property_combination = str_getcsv($_POST["propertyCombination"], "\n");
 				
 				for ($i = 0; $i < count($data); $i++) {
-					$row = str_getcsv($data[$i]);
+					$row = str_getcsv($data[$i], "|");
 					$properties = str_getcsv($property_combination[$i]);
 					$empty = array_shift($properties);
 					$properties = array_map('trim', $properties);
@@ -146,11 +146,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		<form id="itemSingle" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=single"?>" method="post">
 			<h5>csv upload (for single items)</h5>
 			<p>Input format:<br>
-			itemName0, description0, imageUrl0, category0, price0, quantity0<br>
-			itemName1, description1, imageUrl1, category1, price1, quantity1<br>
+			itemName0 | description0 | imageUrl0 | category0 | price0 | quantity0<br>
+			itemName1 | description1 |imageUrl1 | category1 | price1 | quantity1<br>
 			(for quantity: 0 if out of stock, -1 if unavailable)
 			</p>
-			<textarea rows="4" cols="100%" form="itemSingle" name="csvString" placeholder="itemName, description, imageUrl, category, price, quantity..." required></textarea>
+			<textarea rows="4" cols="100%" form="itemSingle" name="csvString" placeholder="itemName | description | imageUrl | category | price | quantity..." required></textarea>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">
 			</div>
@@ -158,9 +158,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		<form id="itemGroup" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=group"?>" method="post">
 			<h5>item group upload (SINGLE ITEM GROUP ONLY)</h5>
 			<p>Input format:<br>
-			itemName, description, defaultImageUrl, category
+			itemName | description | defaultImageUrl | category
 			</p>
-			<input type="text" class="form-control" name="item" placeholder="itemName, description, defaultImageUrl, category" required>
+			<input type="text" class="form-control" name="item" placeholder="itemName | description | defaultImageUrl | category" required>
 			<div class="row">
 			
 			</div>
@@ -173,13 +173,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			<button id="button_addOption" type="button" class="btn btn-outline-danger">Add new option</button>
 			<button id="button_deleteOption" type="button" class="btn btn-outline-danger">Delete option</button>
 			<p>Input format:<br>
-			description, imageUrl, price, quantity<br>
-			description, imageUrl, price, quantity<br>
+			description | imageUrl | price | quantity<br>
+			description | imageUrl | price | quantity<br>
 			(for quantity: 0 if out of stock, -1 if unavailable)
 			</p>
 			<div id="items" class="form-group form-row">
 				<textarea id='itemsHelp' class="form-control col-3" rows="4" cols="100%" form="itemGroup" name="propertyCombination" placeholder="options" readonly required></textarea>
-				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description, imageUrl, price, quantity" required></textarea>
+				<textarea class="form-control col-9" rows="4" cols="100%" form="itemGroup" name="items" placeholder="description | imageUrl | price | quantity" required></textarea>
 			</div>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">

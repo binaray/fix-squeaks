@@ -7,8 +7,8 @@ const ITEMS_PER_PAGE=24;
 <div class="header">
 	<form class="form-inline">	
 		<div class="">
-			<h3>FixSqueaks</h3>
-			<div>we buy/sell and fix things</div>
+			<h3>Pipsqueak</h3>
+			<div>Marketplace</div>
 		</div>
 		<div class="form-inline mx-auto">
 			<input type="text" class="form-control" placeholder="Enter to search..." id="searchInput" class="search">
@@ -140,4 +140,8 @@ if(isset($_GET["item"])){
 		</div>';
 }
 ?>
+</div>
+
+<div class="alert alert-warning m-3" role="alert">
+  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
 </div>

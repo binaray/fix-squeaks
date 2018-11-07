@@ -1,4 +1,5 @@
 <?php
+header("location: /");
 require_once "_config.php";
 session_start();
 

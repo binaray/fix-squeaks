@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+header("location: /");
 // if (!isset($_SESSION['email'])){
 	// header("location: /");
 // }
