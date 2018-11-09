@@ -94,10 +94,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$(document).ready(function () {
 		// window.location.replace("orders");
 		<?php 
-			// echo '$.post("http://hooks.zapier.com/hooks/catch/2321555/e335wh/",{item : '.$jsonEncodedData.'}, function(data){
-				// log(data);
-				// window.location.replace("orders");
-			// });';
+			echo '$.post("'.CODOMO_ZAP.'",{item : '.$jsonEncodedData.'}, function(data){
+				log(data);
+			});';
 		?>
 		
 	});
