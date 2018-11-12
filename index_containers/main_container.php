@@ -1,14 +1,17 @@
 <?php
 if(isset($_GET["page"])){
-	$offset=$_GET["page"]*ITEMS_PER_PAGE;
+	$page=trim($_GET["page"]);
+	$offset=($page-1)*ITEMS_PER_PAGE;
 	if(isset($_GET["category"])){
 		$category = $_GET["category"];
 		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 	}
-	else
+	else{
 		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
+	}
 }
 else{
+	$page=1;
 	if(isset($_GET["category"])){
 		$category = $_GET["category"];
 		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
@@ -74,7 +77,34 @@ $result = $link->query($sql);
 	} else {
 		echo "0 results";
 	}
-	$link->close();
 	?>
 	</div>
+
+	<?php
+	$page_query="?page=";
+	if (isset($category)) {
+		$total_pages_sql = "SELECT COUNT(*) FROM Inventory WHERE category='{$category}'";
+		$page_query="?category={$category}&page=";
+	}
+	else $total_pages_sql = "SELECT COUNT(*) FROM Inventory";
+	$result = mysqli_query($link,$total_pages_sql);
+	$total_rows = mysqli_fetch_array($result)[0];
+	$total_pages = ceil($total_rows / ITEMS_PER_PAGE);
+	?>
+	
+	<nav aria-label="Page navigation">
+	  <ul class="pagination justify-content-center">
+		<li class="page-item"><a class="page-link" href="<?=$page_query?>1">First</a></li>
+		<li class="page-item <?php if($page <= 1) echo 'disabled'; ?>">
+		  <a class="page-link" href="<?php if($page <= 1) echo '#'; else echo $page_query.($page - 1); ?>" tabindex="-1">Previous</a>
+		</li>
+		<li class="page-item <?php if($page >= $total_pages) echo 'disabled'; ?>">
+		  <a class="page-link" href="<?php if($page >= $total_pages) echo '#'; else echo $page_query.($page + 1); ?>">Next</a>
+		</li>
+		<li class="page-item"><a class="page-link" href="<?=$page_query.$total_pages?>">Last</a></li>
+	  </ul>
+	</nav>
+
 </div>
+
+<?php $link->close();?>
