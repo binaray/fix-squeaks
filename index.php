@@ -70,9 +70,17 @@ if (isset($_GET['logout'])){
 			let current_item = JSON.parse(\''.$items_json.'\');
 			';
 			else echo
-			'let items = JSON.parse(\''.$items_json.'\');
-			let option_count = items[0]["properties"].length-1;
-			let current_item = items[0];
+			'let items = JSON.parse(JSON.stringify('.$items_json.'));
+			log(items);
+			let option_count = '.$option_count.'-1;
+			let current_property = [];
+			let count = option_count;
+			while (count > -1){
+				current_property.push($("#property"+count).find(":selected").text());
+				count--;
+			}
+			let current_item = items[JSON.stringify(current_property)];
+			updateDivs();
 			
 			$(".input_spinner").change(function() {
 				let count = option_count;
@@ -84,21 +92,39 @@ if (isset($_GET['logout'])){
 				}
 				log(current_property);
 				
-				let i;
-				for (i = 0; i < items.length; i++){
-					if (items[i]["properties"].equals(current_property)) {
-						current_item = items[i];
-						updateDivs();
-						log(current_item);
-					}
-				}
+				current_item = items[JSON.stringify(current_property)];
+				updateDivs();
+				log(current_item);
 			});
 			
 			function updateDivs(){
 				$("#price").text(current_item["price"]);
 				$("#input_price").val(current_item["price"]);
 				$("#text_itemDescription").text(current_item["description"]);
-			}';
+				if(current_item["quantity"]>0){
+					$( "#button_addMultiToCart" ).replaceWith( \'<button id="button_addMultiToCart" type="button" class="btn btn-outline-primary">Add to cart</button>\' );
+					$("#button_addMultiToCart").click(function(){
+						let url = new URL(window.location.href);
+						let itemToAdd = {
+							itemId : url.searchParams.get("item"),
+							itemName : $("#text_itemName").text(),
+							properties : JSON.stringify(current_property),
+							quantity : $("#input_quantity").val(),
+							price : current_item["price"]
+						};
+						log(JSON.stringify(itemToAdd));
+						$.post("ajax/shopping-cart",{item : JSON.stringify(itemToAdd)}, function(data){
+							log(data);
+							alert("Item added to cart!");
+						});
+					});
+				}
+				else{
+					$( "#button_addMultiToCart" ).replaceWith( \'<button id="button_addMultiToCart" type="button" class="btn btn-outline-primary disabled">Unavailable</button>\' );
+				}
+			}
+			
+			';
 		}
 		?>
 		
@@ -107,7 +133,6 @@ if (isset($_GET['logout'])){
 			let itemToAdd = {
 				itemId : url.searchParams.get("item"),
 				itemName : $("#text_itemName").text(),
-				properties : current_item["properties"],
 				quantity : $("#input_quantity").val(),
 				price : current_item["price"]
 			};

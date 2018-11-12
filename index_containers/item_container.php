@@ -23,7 +23,7 @@ else{
 	if(!empty($options)){
 		$multi_item_disp=true;
 		$options=json_decode($options,true);
-		$option_count=0;
+		$option_count=count($options);
 		
 		// for($i=0; $i<count($option); $i++){
 			
@@ -39,7 +39,6 @@ else{
 			// $spinner_html.='</select>';
 			// $option_count++;
 		// }
-		
 		foreach ($options as $index => $option){
 			foreach ($option as $option_name => $property){
 				$spinner_html.='<label id="label_type'.$index.'">'.$option_name.'</label>
@@ -53,15 +52,15 @@ else{
 			}
 		}
 													
-		$price = (empty($items[0]["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items[0]["price"],2);
-		$add_description = "<div id='text_itemDescription'>".$items[0]["description"]."</div>";
-		$button_order = ($items[0]["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
+		$price = "Currently unavailable";
+		$add_description = "<div id='text_itemDescription'></div>";
+		$button_order = '<button id="button_addMultiToCart" type="button" class="btn btn-outline-primary">No stock</button>';
 	}
 	//----------------------------------single item------------------------------------------//
 	else{
 		$multi_item_disp=false;
 		$price = (empty($items["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items["price"],2);
-		$button_order = ($items["availability"]) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
+		$button_order = ($items["quantity"]>0) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
 	}
 }
 ?>
