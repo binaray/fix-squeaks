@@ -33,8 +33,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate password
     if(empty(trim($_POST["password"]))){
         echo "Please enter a password.";     
-    } else{
-        $password = trim($_POST["password"]);
+    }else if($_POST["password"]!=$_POST["confirm_password"]){
+		echo "Password mismatch!";
+	}else{
+        $password = $_POST["password"];
     }
 	
 	// Validate name

@@ -1,4 +1,5 @@
 <?php
+//LOCK THIS THREAD TO PREVENT POTENTIAL CONFLICTS
 require_once "../_config.php";
 
 $additional_result_text="";
@@ -25,32 +26,62 @@ if (isset($userId)){
 	
 	$item["itemId"] = $itemId;
 	$item["itemName"] = $itemName;
-	if (isset($_GET["properties"])) 
+	$stockError = false;
+	
+	if (isset($_GET["properties"])){
+		//$properties is decoded as it will be re-encoded again TO BE FURTHER DISCUSSED
 		$item["properties"] = json_decode($properties);
-	$item["quantity"] = $quantity;
-	if (isset($_GET["properties"])) 
 		$item["price"] = $items[$properties]["price"];
-	else 
+		
+		if ($items[$properties]["quantity"]<$quantity)
+		{
+			//echo $items[$properties]["price"];
+			$stockError=true;
+		}
+		else 
+			$items[$properties]["quantity"] -= $quantity;
+	}else{
 		$item["price"] = $items["price"];
+		if ($items["quantity"]<$quantity)
+			$stockError=true;
+		else 
+			$items["quantity"] -= $quantity;
+	}
+	$item["quantity"] = $quantity;
 	
 	array_push($itemsBought,$item);
 	
 	$itemsBought = json_encode($itemsBought);
 	$status = "PENDING";
 	
-	$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
-	if($stmt = mysqli_prepare($link, $sql)){
-		mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
-		
-		if(mysqli_stmt_execute($stmt)){
-			echo "Successfully ordered!\n".$additional_result_text;
-		} else{
-			echo "Something went wrong. Please try again later.";
+	if ($stockError) echo "Error: Insufficient stock!";
+	else{
+		$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
+		if($stmt = mysqli_prepare($link, $sql)){
+			mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
+			
+			if(mysqli_stmt_execute($stmt)){
+				echo "Successfully ordered!\n".$additional_result_text;
+			} else{
+				echo "Something went wrong. Please try again later.";
+			}
 		}
+		mysqli_stmt_close($stmt);
+		
+		//update b-c stock
+		$updatedItems = json_encode($items,true);
+		$sql = "UPDATE Inventory SET items=? WHERE itemId=?";
+		$stmt = $link->prepare($sql);
+
+		$stmt->bind_param('ss', $updatedItems, $_GET["item"]);
+		$stmt->execute();
+
+		if ($stmt->errno) {
+		  echo "Error updating stock! " . $stmt->error;
+		}
+		$stmt->close();
+		
 	}
-	mysqli_stmt_close($stmt);
-	
-	//update b-c stock
 }
 mysqli_close($link);
 ?>
