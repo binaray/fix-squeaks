@@ -108,7 +108,7 @@ if (isset($_GET['logout'])){
 						let itemToAdd = {
 							itemId : url.searchParams.get("item"),
 							itemName : $("#text_itemName").text(),
-							properties : JSON.stringify(current_property),
+							properties : current_property,
 							quantity : $("#input_quantity").val(),
 							price : current_item["price"]
 						};

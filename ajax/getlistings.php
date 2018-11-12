@@ -2,7 +2,7 @@
 require_once "../_config.php";
 
 if (isset($_GET["listingId"])){
-	$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE Listings.listingId = '{$_GET["listingId"]}'";
+	$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Inventory.itemName, Users.telegramId FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId INNER JOIN Users ON Listings.userId = Users.userId WHERE Listings.listingId = '{$_GET["listingId"]}'";
 	$result = $link->query($sql);
 
 	while($row = $result->fetch_assoc()) {
@@ -10,6 +10,7 @@ if (isset($_GET["listingId"])){
 		else {
 			$listing = array();
 			$listing["listingId"] = $row["listingId"];
+			$listing["sellerTelegramId"] = $row["telegramId"];
 			$listing["itemName"] = $row["itemName"];
 			$listing["properties"] = $row["properties"];
 			$listing["price"] = $row["price"];
@@ -20,7 +21,7 @@ if (isset($_GET["listingId"])){
 	echo json_encode($listing);
 }
 else{
-	$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE Listings.itemId = '{$_GET["item"]}'";
+	$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Inventory.itemName, Users.telegramId FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId INNER JOIN Users ON Listings.userId = Users.userId WHERE Listings.itemId = '{$_GET["item"]}'";
 	//$sql="SELECT * FROM Listings WHERE itemId = {$_GET["item"]} ORDER BY price";
 	$result = $link->query($sql);
 
@@ -30,6 +31,7 @@ else{
 		else {
 			$listing = array();
 			$listing["listingId"] = $row["listingId"];
+			$listing["sellerTelegramId"] = $row["telegramId"];
 			$listing["itemName"] = $row["itemName"];
 			$listing["properties"] = $row["properties"];
 			$listing["price"] = $row["price"];
