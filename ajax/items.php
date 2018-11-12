@@ -24,10 +24,13 @@ if ($result->num_rows > 0) {
 		while($row = $result->fetch_assoc()) {
 			$items = json_decode($row["items"], true);
 			$options = json_decode($row["options"], true);
+			$imageUrl = (empty($row["imageUrl"])) ? "https://via.placeholder.com/150x150" : $row["imageUrl"];
 			
 			$output = array(
 				'itemId' => $row["itemId"],
 				'itemName' => $row["itemName"],
+				'imageUrl' => $imageUrl,
+				'category' => $row["category"],
 				'description' => $row["description"],
 				'options' => $options,
 				'items' => $items,
