@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-header("location: /");
 // if (!isset($_SESSION['email'])){
 	// header("location: /");
 // }
@@ -23,32 +22,83 @@ if(isset($_GET["action"])){
 		if (isset($userId)){
 			
 			$itemsBought = array();
+			$stockError = false;
 			
 			foreach ($_SESSION["cart"] as $item){
-				array_push($itemsBought,json_decode($item,true));
-			}
-			
-			var_dump($itemsBought);
-			$itemsBought = json_encode($itemsBought);
-			$status = "PENDING";
-			
-			$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
-			if($stmt = mysqli_prepare($link, $sql)){
-				// Bind variables to the prepared statement as parameters
-				mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
+				$item = json_decode($item,true);
 				
-				// Attempt to execute the prepared statement
-				if(mysqli_stmt_execute($stmt)){
-					echo "Successfully added!\n";
-					unset($_SESSION["cart"]);
-					mysqli_stmt_close($stmt);
-					mysqli_close($link);
-					header("location: orders?buy=success");
-				} else{
-					echo "Something went wrong. Please try again later.";
+				//fetch item
+				$sql="SELECT itemName, items FROM Inventory WHERE itemId = {$item["itemId"]}";
+				$result = $link->query($sql);
+				while($row = $result->fetch_assoc()) {
+					if ($result->num_rows== 0) echo "No such item!";
+					$itemName = $row["itemName"];
+					$stock = json_decode($row["items"], true);
 				}
+				
+				//get based on specific property
+				if (isset($item["properties"])){
+					$properties = json_encode($item["properties"]);
+					$item["price"] = $item["price"];
+
+					if ($stock[$properties]["quantity"]<$item["quantity"])
+					{
+						$stockError=true;
+						echo "{$itemName} {$properties} is out of stock!";
+					}
+					else 
+						$stock[$properties]["quantity"] -= $item["quantity"];
+				}else{
+					//reassignment in case of abuse or (!) Generate warning for updated prices
+					$item["price"] = $stock["price"];
+					if ($stock["quantity"]<$item["quantity"]){
+						$stockError=true;
+						echo "{$itemName} is out of stock!";
+					}
+					else 
+						$stock["quantity"] -= $item["quantity"];
+				}
+				
+				//update b-c stock
+				$updatedItems = json_encode($stock,true);
+				$sql = "UPDATE Inventory SET items=? WHERE itemId=?";
+				$stmt = $link->prepare($sql);
+
+				$stmt->bind_param('ss', $updatedItems, $item["itemId"]);
+				$stmt->execute();
+
+				if ($stmt->errno) {
+					echo "Error updating stock! " . $stmt->error;
+				}
+				else if($stockError){
+				}
+				else{
+					array_push($itemsBought,$item);
+				}
+				$stmt->close();
 			}
-			mysqli_stmt_close($stmt);
+			
+			if (!empty($itemsBought)){
+				$itemsBought = json_encode($itemsBought);
+				$status = "PENDING";	
+				$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
+				if($stmt = mysqli_prepare($link, $sql)){
+					// Bind variables to the prepared statement as parameters
+					mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
+					
+					// Attempt to execute the prepared statement
+					if(mysqli_stmt_execute($stmt)){
+						echo "Successfully added to orders!\n";
+						unset($_SESSION["cart"]);
+						// mysqli_stmt_close($stmt);
+						// mysqli_close($link);
+						//header("location: orders?buy=success");
+					} else{
+						echo "Something went wrong. Please try again later.";
+					}
+				}
+				mysqli_stmt_close($stmt);
+			}
 		}
 		mysqli_close($link);
 	}
@@ -151,9 +201,9 @@ if(isset($_GET["buyListed"])){
 		echo "<h5>Retail Items Ordered</h5>
 		<div class='row itemHeader'>
 			<div class='col-6'>Item</div>
-			<div class='col-2'>Cost</div>
-			<div class='col-2'>Qty</div>
-			<div class='col-2'>Total</div>
+			<div class='col-2 text-right'>Cost</div>
+			<div class='col-2 text-right'>Qty</div>
+			<div class='col-2 text-right'>Total</div>
 		</div>";
 		$grandTotal=0.00;
 		
@@ -170,16 +220,16 @@ if(isset($_GET["buyListed"])){
 			
 			echo "<div class='row cart_item'>
 						<div class='col-6'>".$item["itemName"].$properties_html."</div>
-						<div class='col-2'>".$item["price"]."</div>
-						<div class='col-2'>".$item["quantity"]."</div>
-						<div class='col-2'>".$total."</div>
+						<div class='col-2 text-right'>".number_format($item["price"],2)."</div>
+						<div class='col-2 text-right'>".$item["quantity"]."</div>
+						<div class='col-2 text-right'>".number_format($total,2)."</div>
 					</div>";
 			$grandTotal+=$total;
 		}
 		
 		echo "<div class='row itemHeader'>
 				<div class='col-10 text-right'>Grand total:</div>
-				<div class='col-2'>".$grandTotal."</div>
+				<div class='col-2 text-right'>".number_format($grandTotal,2)."</div>
 			</div>";
 		
 		if (!isset($_SESSION['email'])){
