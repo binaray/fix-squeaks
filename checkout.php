@@ -1,11 +1,8 @@
 <?php
 session_start();
 
-// if (!isset($_SESSION['email'])){
-	// header("location: /");
-// }
-
 if(isset($_GET["action"])){
+	if (!isset($_SESSION['email'])) header("location: /logon/login?redirect=/checkout");
 	
 	if($_GET["action"]=="reset"){
 		unset($_SESSION["listedCart"]);
@@ -13,15 +10,14 @@ if(isset($_GET["action"])){
 	}	
 	if(isset($_SESSION["cart"]) && $_GET["action"]=="purchase"){
 		require_once "_config.php";
-		
 		$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$userId=$row["userId"];
 		}
+		
 		if (isset($userId)){			
 			$itemsBought = array();
-			
 			foreach ($_SESSION["cart"] as $item){
 				$item = json_decode($item,true);
 				$stockError = false;
@@ -43,7 +39,7 @@ if(isset($_GET["action"])){
 					if ($stock[$properties]["quantity"]<$item["quantity"])
 					{
 						$stockError=true;
-						echo "{$itemName} {$properties} is out of stock!";
+						echo "Sorry, we have insufficient stock of {$itemName} {$properties}!";
 					}
 					else 
 						$stock[$properties]["quantity"] -= $item["quantity"];
@@ -87,9 +83,9 @@ if(isset($_GET["action"])){
 					if(mysqli_stmt_execute($stmt)){
 						echo "Successfully added to orders!\n";
 						unset($_SESSION["cart"]);
-						// mysqli_stmt_close($stmt);
-						// mysqli_close($link);
-						//header("location: orders?buy=success");
+						mysqli_stmt_close($stmt);
+						mysqli_close($link);
+						header("location: orders?buy=success");
 					} else{
 						echo "Something went wrong. Please try again later.";
 					}
@@ -104,38 +100,58 @@ if(isset($_GET["removeListed"])){
 	unset($_SESSION["listedCart"][$_GET["removeListed"]]);
 }
 if(isset($_GET["buyListed"])){
-	//repeated code
+	if (!isset($_SESSION['email'])) header("location: /logon/login?redirect=/checkout");
 	require_once "_config.php";		
 	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
 	$result = $link->query($sql);
 	while($row = $result->fetch_assoc()) {
 		$userId=$row["userId"];
 	}
+	
 	if (isset($userId)){
-		$sql = "INSERT INTO UserOrders (listingId, buyerId, quantity, status) VALUES (?, ?, ?, ?)";	
-		if($stmt = mysqli_prepare($link, $sql)){
-			// Bind variables to the prepared statement as parameters
-			mysqli_stmt_bind_param($stmt, "ssss", $listingId, $buyerId, $quantity, $status);
-			
-			$listedItem = json_decode($_SESSION["listedCart"][$_GET["buyListed"]],true);
-			
-			$listingId = $listedItem["listingId"];
-			$buyerId = $userId;
-			$quantity = $listedItem["quantity"];
-			$status = "PENDING";
-			
-			// Attempt to execute the prepared statement
-			if(mysqli_stmt_execute($stmt)){
-				echo "Successfully added!\n";
-				unset($_SESSION["cart"]);
-				mysqli_stmt_close($stmt);
-				mysqli_close($link);
-				unset($_SESSION["listedCart"][$_GET["buyListed"]]);
-				header("location: orders?buy=success");
-			} else{
-				echo "Something went wrong. Please try again later.";
+		$listedItem = json_decode($_SESSION["listedCart"][$_GET["buyListed"]],true);
+		
+		$listingId = $listedItem["listingId"];
+		$buyerId = $userId;
+		$quantity = $listedItem["quantity"];
+		$status = "PENDING";
+
+		$sql="SELECT quantity FROM Listings WHERE listingId = {$listingId}";
+		$result = $link->query($sql);
+		while($row = $result->fetch_assoc()) {
+			if ($result->num_rows== 0) echo "No such item!";
+			else if($quantity>$row["quantity"]) $stockError=true;
+			else $updatedStock=$row["quantity"]-$quantity;
+		}
+		
+		
+		if(isset($stockError)) echo "Sorry, someone just bought the last stock!";
+		else{
+			//update stock
+			$sql = "UPDATE Listings SET quantity=? WHERE listingId=?";
+			$stmt = $link->prepare($sql);
+			$stmt->bind_param('is', $updatedStock, $listingId);
+			$stmt->execute();
+
+			if ($stmt->errno) {
+			  echo "Error updating stock! " . $stmt->error;
 			}
-			mysqli_stmt_close($stmt);
+			$stmt->close();
+			
+			//add to user(listing)orders
+			$sql = "INSERT INTO UserOrders (listingId, buyerId, quantity, status) VALUES (?, ?, ?, ?)";	
+			if($stmt = mysqli_prepare($link, $sql)){
+				mysqli_stmt_bind_param($stmt, "ssss", $listingId, $buyerId, $quantity, $status);
+				
+				if(mysqli_stmt_execute($stmt)){
+					echo "Successfully added!\n";
+					unset($_SESSION["listedCart"][$_GET["buyListed"]]);
+					// header("location: orders?buy=success");
+				} else{
+					echo "Something went wrong. Please try again later.";
+				}
+				mysqli_stmt_close($stmt);
+			}
 		}
 	}
 	mysqli_close($link);
@@ -156,6 +172,7 @@ if(isset($_GET["buyListed"])){
   </head>
   
   <body>
+	<?php include "header.php";?>
 	<div class="container">
 		<h3>Check-out</h3>
 		
@@ -163,10 +180,10 @@ if(isset($_GET["buyListed"])){
 	if (isset($_SESSION["listedCart"])){
 		echo "<h5>Listed Items in Cart</h5>
 		<div class='row itemHeader'>
-			<div class='col-6'>Item</div>
-			<div class='col-2'>Cost</div>
-			<div class='col-2'>Qty</div>
-			<div class='col-2'>Total</div>
+			<div class='col-5'>Item</div>
+			<div class='col-1'>Cost</div>
+			<div class='col-1'>Qty</div>
+			<div class='col-1'>Total</div>
 		</div>";
 		
 		foreach ($_SESSION["listedCart"] as $index => $item){

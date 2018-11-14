@@ -3,7 +3,7 @@ require_once "_config.php";
 session_start();
 
 if (!isset($_SESSION['email'])) {
-	header("location: logon/login.php?redirect=/sell");
+	header("location: logon/login?redirect=/sell");
 }	
 else{			
 	$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
@@ -73,11 +73,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		</div>
 	</div>
 	
+  <?php include "header.php";?>
 	<div class="container">
 		<?php
 		$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Listings.createdAt, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE userId = '{$userId}'";
 		$result = $link->query($sql);
-		if($result->num_rows>0) echo "<h3>Listed Items</h3>";
+		if($result->num_rows>0) echo "<h3>Your Listed Items</h3>";
 		while($row = $result->fetch_assoc()) {
 			
 			echo "

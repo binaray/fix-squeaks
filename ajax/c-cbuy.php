@@ -16,7 +16,7 @@ while($row = $result->fetch_assoc()) {
 	else $updatedStock=$row["quantity"]-$quantity;
 }
 
-if (isset($stockError)) echo "Item out of stock!";
+if (isset($stockError)) echo "Error: insufficient item stock!";
 else {
 	//add to users orders
 	$sql = "INSERT INTO UserOrders (listingId, buyerId, quantity, status) VALUES (?, ?, ?, ?)";	

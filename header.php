@@ -2,28 +2,48 @@
 //header.php: contains constants, and navigation
 //use static linking here
 
+if($_SERVER["HTTPS"] != "on")
+{
+    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+    exit();
+}
+
 const ITEMS_PER_PAGE=24;
 ?>	
-<div class="header">
-	<form class="form-inline">	
-		<div class="">
-			<h3>Pipsqueak</h3>
-			<div>Marketplace</div>
-		</div>
-		<div class="form-inline mx-auto">
-			<input type="text" class="form-control" placeholder="Enter to search..." id="searchInput" class="search">
-			<button type="button" class="btn btn-outline-primary">Search</button>
-		</div>
+<div class="header pb-3">
+	<nav class="navbar navbar-expand-sm navbar-dark navbar-shrink bg-dark">
+      <a class="navbar-brand" href="/">Pipsqueak</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExample02">
+        <form class="form-inline mr-auto" action="/" method="get">
+          <input name="search" class="form-control form-control-sm" type="text" placeholder="Search item.." style="width: 250px;">
+        </form>
+		
+		<ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/checkout">Cart</a>
+          </li>
 		<?php
 		if (!isset($_SESSION['email']))
-			echo 
-				'<button id="button_login" type="button" class="btn btn-outline-success">Login</button>
-				<button id="button_register" type="button" class="btn btn-outline-danger">Register</button>';
+			echo'
+          <li class="nav-item" id="button_login">
+            <a class="nav-link" href="#">Login</a>
+          </li>
+          <li class="nav-item" id="button_register">
+            <a class="nav-link" href="#">Register</a>
+          </li>';
 		else
-			echo '<a class="btn btn-outline-success" href="/checkout">Shopping cart</a>
-				<a class="btn btn-outline-danger" href="/index?logout=true">Logout</a>';
+			echo '
+          <li class="nav-item">
+            <a class="nav-link" href="/?logout=true">Logout</a>
+          </li>';
 		?>
-	</form>
+        </ul>
+      </div>
+    </nav>
 			
 	<nav class="navbar navbar-expand-lg navbar-light bg-light rounded" style="padding: .25rem 0 0 0">
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,25 +52,25 @@ const ITEMS_PER_PAGE=24;
 	  <div class="collapse navbar-collapse justify-content-md-center" id="navbar">
 		<ul class="navbar-nav">
 		  <li class="nav-item filter-button" data-filter="all">
-			<a class="nav-link" href="/index">All</a>
+			<a class="nav-link" href="/">All</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="material">
-			<a class="nav-link" href="/index?category=materials">Material</a>
+			<a class="nav-link" href="/?category=materials">Material</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="electronics">
-			<a class="nav-link" href="/index?category=electronics">Electronics</a>
+			<a class="nav-link" href="/?category=electronics">Electronics</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="fasteners">
-			<a class="nav-link" href="/index?category=fasteners">Fasteners</a>
+			<a class="nav-link" href="/?category=fasteners">Fasteners</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="paint">
-			<a class="nav-link" href="/index?category=paint">Paint</a>
+			<a class="nav-link" href="/?category=paint">Paint</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="chemicals">
-			<a class="nav-link" href="/index?category=chemicals">Chemicals</a>
+			<a class="nav-link" href="/?category=chemicals">Chemicals</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="amenities">
-			<a class="nav-link" href="/index?category=amenities">Amenities</a>
+			<a class="nav-link" href="/?category=amenities">Amenities</a>
 		  </li>
 		  <li class="nav-item disabled">
 			<div class="nav-link">|</div>
@@ -79,6 +99,11 @@ const ITEMS_PER_PAGE=24;
 		</ul>
 	  </div>
 	</nav>
+
+	<!--Announcements-->
+	<div class="alert alert-warning m-3" role="alert">
+	  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
+	</div>
 </div>
 
 <div class="fixed-top overlay">
@@ -140,8 +165,4 @@ if(isset($_GET["item"])){
 		</div>';
 }
 ?>
-</div>
-
-<div class="alert alert-warning m-3" role="alert">
-  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
 </div>

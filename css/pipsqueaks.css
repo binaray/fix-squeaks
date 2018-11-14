@@ -1,3 +1,22 @@
+@font-face {
+    font-family: Kelson;
+    src: url(Kelson_Sans_Regular.otf);
+}
+@font-face {
+    font-family: Edelsans;
+    src: url(edelsans_regular.otf);
+}
+.navbar-brand{
+	font-family: Kelson;
+	font-size: 1.35rem;
+}
+
+body {
+	font-family: Edelsans;
+    background: #fff;
+    color: #222;
+}
+
 .overlay{
 	display: none;
 	position: fixed;

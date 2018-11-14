@@ -1,29 +1,21 @@
 <?php
+$search=$_GET["search"];
+
 if(isset($_GET["page"])){
 	$page=trim($_GET["page"]);
 	$offset=($page-1)*ITEMS_PER_PAGE;
-	if(isset($_GET["category"])){
-		$category = $_GET["category"];
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
-	}
-	else{
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
-	}
+	$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE itemName LIKE '%".$search."%' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE." OFFSET {$offset}";
 }
 else{
 	$page=1;
-	if(isset($_GET["category"])){
-		$category = $_GET["category"];
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE category='{$category}' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
-	}
-	else
-		$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
+	$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory WHERE itemName LIKE '%".$search."%' ORDER BY itemId DESC LIMIT ".ITEMS_PER_PAGE;
 }
 
 $result = $link->query($sql);
 ?>
 
 <div class="container">
+	<h3>Search Results</h3>
 	<div class="row mb-5">
 	<?php
 	if ($result->num_rows > 0) {
@@ -81,12 +73,9 @@ $result = $link->query($sql);
 	</div>
 
 	<?php
-	$page_query="?page=";
-	if (isset($category)) {
-		$total_pages_sql = "SELECT COUNT(*) FROM Inventory WHERE category='{$category}'";
-		$page_query="?category={$category}&page=";
-	}
-	else $total_pages_sql = "SELECT COUNT(*) FROM Inventory";
+	$total_pages_sql = "SELECT COUNT(*) FROM Inventory WHERE itemName LIKE '%".$search."%'";
+	$page_query="?search={$search}&page=";
+
 	$result = mysqli_query($link,$total_pages_sql);
 	$total_rows = mysqli_fetch_array($result)[0];
 	$total_pages = ceil($total_rows / ITEMS_PER_PAGE);

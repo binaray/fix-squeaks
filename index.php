@@ -27,6 +27,8 @@ if (isset($_GET['logout'])){
 	//if item parameter is specified, show item details; otherwise show item list
 	if(isset($_GET["item"]))
 		include "index_containers/item_container.php";
+	else if(isset($_GET["search"]))
+		include "index_containers/search_container.php";
 	else
 		include "index_containers/main_container.php";				
 	
