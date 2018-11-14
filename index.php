@@ -173,6 +173,8 @@ if (isset($_GET['logout'])){
 			log(JSON.stringify(itemToAdd));
 			$.post("ajax/shopping-cart",{listedItem : JSON.stringify(itemToAdd)}, function(data){
 				log(data);
+				$(".overlay_listing").hide();
+				$(".overlay").hide();
 				alert("Item added to cart!");
 			});
 			// if (confirm('Confirm purchase? Unlike buying from us directly, receipts will not be issued.')) {
