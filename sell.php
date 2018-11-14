@@ -57,9 +57,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   </head>
   
   <body>
-	<div class="fixed-top overlay">
-		<div class="overlay_sell overlay_form">
-			<h3 class="overlay_header">Sell Item</h3>
+	<div id="overlay_sell" class="fixed-top overlay">
+		<div class="overlay_form">
+			<h3 id="overlay_sell_title" class="overlay_header">Sell Item</h3>
 			<form enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 				<input id="input_itemId" type="number" name="itemId" style="display: none;" required>
 				<input type="number" name="quantity" class="form-control" placeholder="qty" min="1" step="1" required>

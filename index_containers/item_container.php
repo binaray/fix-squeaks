@@ -68,8 +68,8 @@ else{
 <div class="container">
 	<div class="row"><h3 id="text_itemName"><?=$itemName;?></h3></div>
 	<div class="row">
-		<div class="col-md-3">
-			<img src="image?upload=<?=$imageUrl;?>" alt="<?=$itemName;?>" width="100%" height="150">
+		<div class="col-md-4 col-lg-3 text-center">
+			<img src="image?upload=<?=$imageUrl;?>" alt="<?=$itemName;?>" height="200px">
 			<form>
 				<div id="price"><?=$price?></div>
 				<?=$spinner_html;?>
@@ -79,7 +79,7 @@ else{
 			</form>
 		</div>
 								
-		<div class="col-md-9">
+		<div class="col-md-8 col-lg-9">
 			<ul class="nav nav-tabs" id="profileTabs" role="tablist">
 				<li class="nav-item">
 					<a class="nav-link active tab_padding" id="itemDescription-tab" data-toggle="tab" href="#itemDescription" role="tab" aria-controls="itemDescription" aria-selected="true">Description</a>

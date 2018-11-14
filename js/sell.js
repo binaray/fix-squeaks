@@ -8,8 +8,8 @@ $(document).ready(function () {
 		let itemId = $(this).find('.itemId').text();
 		
 		$.get("ajax/items?item="+itemId, function(data) {
-			$('.overlay').show();
-			$('.overlay_header').text("Sell: "+data.itemName);
+			$('#overlay_sell').show();
+			$('#overlay_sell_title').text("Sell: "+data.itemName);
 			$('#input_itemId').val(itemId);
 			if(data.options==null){
 				log("Single item");
@@ -45,7 +45,7 @@ $(document).ready(function () {
 	});
 
 	$('.button_cancel').click(function(){
-		$('.overlay').hide();
+		$('#overlay_sell').hide();
 	});
 
 });
