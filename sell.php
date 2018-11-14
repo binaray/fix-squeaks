@@ -1,5 +1,4 @@
 <?php
-header("location: /");
 require_once "_config.php";
 session_start();
 
@@ -76,11 +75,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	
 	<div class="container">
 		<?php
-		$sql = "SELECT * FROM Listings WHERE userId = '{$userId}'";
+		$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Listings.createdAt, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE userId = '{$userId}'";
 		$result = $link->query($sql);
 		if($result->num_rows>0) echo "<h3>Listed Items</h3>";
 		while($row = $result->fetch_assoc()) {
-			echo "<div class='row'>".json_encode($row)."</div>";
+			
+			echo "
+					<div class='row'>
+						<div class='col-1'>".$row["listingId"]."</div>
+						<div class='col-6'>".$row["itemName"]." ".$row["properties"]."</div>
+						<div class='col-1'>".$row["price"]."</div>
+						<div class='col-1'>".$row["quantity"]."</div>
+						<div class='col-3'>".$row["createdAt"]."</div>
+					</div>";
 		}
 		?>
 		
@@ -97,6 +104,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 			$sql="SELECT * FROM Inventory WHERE itemName LIKE '%".$search."%'";	
 			$result = $link->query($sql);
+			if ($result->num_rows == 0) echo "<div class='text-center'>No results..</div>";
 			while($row = $result->fetch_assoc()) {
 				echo "<div class='row sellable'> <div class='itemId'>{$row["itemId"]}</div> {$row["itemName"]} {$row["description"]} {$row["category"]}</div>";			
 			}

@@ -19,13 +19,12 @@ if(isset($_GET["action"])){
 		while($row = $result->fetch_assoc()) {
 			$userId=$row["userId"];
 		}
-		if (isset($userId)){
-			
+		if (isset($userId)){			
 			$itemsBought = array();
-			$stockError = false;
 			
 			foreach ($_SESSION["cart"] as $item){
 				$item = json_decode($item,true);
+				$stockError = false;
 				
 				//fetch item
 				$sql="SELECT itemName, items FROM Inventory WHERE itemId = {$item["itemId"]}";
@@ -70,9 +69,7 @@ if(isset($_GET["action"])){
 				if ($stmt->errno) {
 					echo "Error updating stock! " . $stmt->error;
 				}
-				else if($stockError){
-				}
-				else{
+				else if(!$stockError){
 					array_push($itemsBought,$item);
 				}
 				$stmt->close();

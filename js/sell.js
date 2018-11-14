@@ -7,7 +7,7 @@ $(document).ready(function () {
 	$('.sellable').click(function(){
 		let itemId = $(this).find('.itemId').text();
 		
-		$.get("ajax/itemDetails?item="+itemId, function(data) {
+		$.get("ajax/items?item="+itemId, function(data) {
 			$('.overlay').show();
 			$('.overlay_header').text("Sell: "+data.itemName);
 			$('#input_itemId').val(itemId);
@@ -23,14 +23,18 @@ $(document).ready(function () {
 				var option;
 				
 				for (option in options){
-					spinner_html+='<label>'+option+'</label>'+
-					'<input name="type'+option_count+'" style="display: none; value="'+option+'">'+
+					let optionTitle=Object.keys(options[option])[0];
+					
+					log(optionTitle);
+					spinner_html+='<label>'+optionTitle+'</label>'+
+					'<input name="type'+option_count+'" style="display: none; value="'+optionTitle+'">'+
 					'<select name="property'+option_count+'" class="form-control">';
-					log(option+":");
+					
+					log(options[option]);
 					var selection;
-					for (selection in options[option]){
-						spinner_html+='<option>'+options[option][selection]+'</option>';
-						log(options[option][selection]);
+					for (selection in options[option][optionTitle]){
+						spinner_html+='<option>'+options[option][optionTitle][selection]+'</option>';
+						log(options[option][optionTitle][selection]);
 					}	
 					spinner_html+='</select>';
 					option_count++;
