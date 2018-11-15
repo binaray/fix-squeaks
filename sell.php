@@ -74,44 +74,65 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	</div>
 	
   <?php include "header.php";?>
-	<div class="container">
-		<?php
-		$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Listings.createdAt, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE userId = '{$userId}'";
-		$result = $link->query($sql);
-		if($result->num_rows>0) echo "<h3>Your Listed Items</h3>";
-		while($row = $result->fetch_assoc()) {
-			
-			echo "
-					<div class='row'>
-						<div class='col-1'>".$row["listingId"]."</div>
-						<div class='col-6'>".$row["itemName"]." ".$row["properties"]."</div>
-						<div class='col-1'>".$row["price"]."</div>
-						<div class='col-1'>".$row["quantity"]."</div>
-						<div class='col-3'>".$row["createdAt"]."</div>
-					</div>";
-		}
-		?>
+  
+  <div id="main_body">
+  <div class="container">
+	
+	<?php
+	$sql = "SELECT Listings.listingId, Listings.properties, Listings.price, Listings.quantity, Listings.createdAt, Inventory.itemName FROM Listings INNER JOIN Inventory ON Listings.itemId = Inventory.itemId WHERE userId = '{$userId}'";
+	$result = $link->query($sql);
+	if($result->num_rows>0) {
+		echo "
+			<h3>Your Listed Items</h3>
+			<div class='row'>
+				<div class='col-1'>ID</div>
+				<div class='col-6'>Item</div>
+				<div class='col-1'>Price</div>
+				<div class='col-1'>Qty</div>
+				<div class='col-3'>Date added</div>
+			</div>";
 		
-		<h3>Add item to sell</h3>
-		<form class="form-inline mx-auto" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
-			<input type="text" class="form-control" placeholder="Enter to search..." name="search" id="searchInput" class="search">
-			<input type="submit" class="btn btn-outline-primary" value="Submit">
-		</form>
-		<a href="/index.php">Not listed? Send in a request to to list your item!</a>
+	}
+	while($row = $result->fetch_assoc()) {
 		
-		<?php
-		if(isset($_GET["search"])){
-			$search=$_GET["search"];
+		echo "
+			<div class='row'>
+				<div class='col-1'>".$row["listingId"]."</div>
+				<div class='col-6'>".$row["itemName"]."<br>".$row["properties"]."</div>
+				<div class='col-1'>".$row["price"]."</div>
+				<div class='col-1'>".$row["quantity"]."</div>
+				<div class='col-3'>".$row["createdAt"]."</div>
+			</div>";
+	}
+	?>
+	
+	<h3>Add item to sell</h3>
+	<form class="form-inline mx-auto" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
+		<input type="text" class="form-control" placeholder="Enter to search..." name="search" id="searchInput" class="search">
+		<input type="submit" class="btn btn-outline-primary" value="Submit">
+	</form>
+	<a href="/index.php">Not listed? Send in a request to to list your item!</a>
+	
+	<?php
+	if(isset($_GET["search"])){
+		$search=$_GET["search"];
 
-			$sql="SELECT * FROM Inventory WHERE itemName LIKE '%".$search."%'";	
-			$result = $link->query($sql);
-			if ($result->num_rows == 0) echo "<div class='text-center'>No results..</div>";
-			while($row = $result->fetch_assoc()) {
-				echo "<div class='row sellable'> <div class='itemId'>{$row["itemId"]}</div> {$row["itemName"]} {$row["description"]} {$row["category"]}</div>";			
-			}
+		$sql="SELECT * FROM Inventory WHERE itemName LIKE '%".$search."%'";	
+		$result = $link->query($sql);
+		if ($result->num_rows == 0) echo "<div class='text-center'>No results..</div>";
+		while($row = $result->fetch_assoc()) {
+			echo "
+			<div class='row sellable'> 
+				<div class='itemId col-1'>{$row["itemId"]}</div> 
+				<div class='col-3'>{$row["itemName"]}</div> 
+				<div class='col-6'>{$row["description"]}</div> 
+				<div class='col-2'>{$row["category"]}</div> 
+			</div>";			
 		}
-		?>
-	</div>
+	}
+	?>
+  </div>
+  </div>
 	
 	<?php include "footer.php";?>
 	

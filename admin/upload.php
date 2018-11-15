@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-// if ($_SESSION['email']!="bigsqueak@pipsqueak.com")
-	// header("location: ../index.php");
+if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com")
+	header("location: ../index.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp'); // valid extensions

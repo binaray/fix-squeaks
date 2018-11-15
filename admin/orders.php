@@ -1,9 +1,9 @@
 <?php
-// session_start();
 
-// if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
-	// header("location: /");
-// }
+session_start();
+if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
+	header("location: /");
+}
 
 require_once "../_config.php";
 

@@ -15,7 +15,9 @@ $result = $link->query($sql);
 ?>
 
 <div class="container">
-	<h3>Search Results</h3>
+	<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
+		<h6 class="title_category">Search Results</h6>
+	</div>
 	<div class="row mb-5">
 	<?php
 	if ($result->num_rows > 0) {

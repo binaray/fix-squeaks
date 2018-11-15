@@ -7,7 +7,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$orderId=$_POST["orderId"];
 	
 	if(isset($_POST["issue"])) {
-		$sql = "SELECT Users.name, Users.email, Orders.itemsBought FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
+		$sql = "SELECT Users.userId, Users.name, Users.email, Orders.itemsBought FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$itemsBought=json_decode($row["itemsBought"],true);
@@ -40,17 +40,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 						<div class='col-1 userId'>".$row["email"]."</div>
 						<div class='col-8 itemsBought'>".json_encode($itemsBought)."</div>
 					</div>";
+			$userId = $row["userId"];
 			$name = $row["name"];
 			$email = $row["email"];
 		}
 		$date = date_create();
 		
 		$data = array(
+			'userId' => $userId,
 			'name' => $name,
 			'email' => $email,
 			'itemName' => $itemName,
 			'price' => $price,
 			'quantity' => $quantity,
+			'gtt' => $price*$quantity,
 			'dateTimeGenerated' => date_timestamp_get($date)
 		 );
 		
@@ -92,11 +95,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	let log = console.log.bind(console);
 	
 	$(document).ready(function () {
-		// window.location.replace("orders");
+		window.location.replace("orders");
 		<?php 
-			echo '$.post("'.CODOMO_ZAP.'",{item : '.$jsonEncodedData.'}, function(data){
-				log(data);
-			});';
+			// broken mess
+			// $zap = "https://hooks.zapier.com/hooks/catch/3959751/ea50h0/";
+			// echo '$.post("'.CODOMO_ZAP.'",{item : '.$jsonEncodedData.'}, function(data){
+				// log(data);
+			// });';
 		?>
 		
 	});

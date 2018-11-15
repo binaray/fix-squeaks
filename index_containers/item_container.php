@@ -88,7 +88,7 @@ else{
 			</form>
 		</div>
 								
-		<div class="col-md-8 col-lg-9">
+		<div class="col-md-8 col-lg-9 pt-2">
 			<ul class="nav nav-tabs" id="profileTabs" role="tablist">
 				<li class="nav-item">
 					<a class="nav-link active tab_padding" id="itemDescription-tab" data-toggle="tab" href="#itemDescription" role="tab" aria-controls="itemDescription" aria-selected="true">Description</a>

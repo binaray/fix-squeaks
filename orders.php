@@ -32,7 +32,8 @@ while($row = $result->fetch_assoc()) {
   
   <body>
 	<?php include "header.php";?>	
-  
+	
+	<div id="main_body">
 	<div class="container">
 		<h3>Orders</h3>
 		<div class='row itemHeader'>
@@ -65,6 +66,7 @@ while($row = $result->fetch_assoc()) {
 			}
 		}
 		?>
+	</div>
 	</div>
 	
 	<?php include "footer.php";?>
