@@ -15,6 +15,7 @@ else{
 		$imageUrl = $row["imageUrl"];
 		$description = $row["description"];
 		$options = $row["options"];
+		$category = $row["category"];
 		$items_json = $row["items"];
 		$items = json_decode($items_json, true);
 	}
@@ -41,7 +42,7 @@ else{
 		// }
 		foreach ($options as $index => $option){
 			foreach ($option as $option_name => $property){
-				$spinner_html.='<label id="label_type'.$index.'">'.$option_name.'</label>
+				$spinner_html.='<label id="label_type'.$index.'" class="mb-0 mt-1">'.$option_name.'</label>
 				<input name="type'.$index.'" style="display: none; value="'.$option_name.'">
 				<select id="property'.$index.'" name="property'.$index.'" class="form-control input_spinner">';
 				
@@ -52,29 +53,37 @@ else{
 			}
 		}
 													
-		$price = "Currently unavailable";
+		$price = "Price unavailable";
 		$add_description = "<div id='text_itemDescription'></div>";
 		$button_order = '<button id="button_addMultiToCart" type="button" class="btn btn-outline-primary">No stock</button>';
 	}
 	//----------------------------------single item------------------------------------------//
 	else{
 		$multi_item_disp=false;
-		$price = (empty($items["price"])) ? "Currently unavailable" : "Brand new at: $".number_format($items["price"],2);
+		$price = (empty($items["price"])) ? "Price unavailable" : "Brand new at: $".number_format($items["price"],2);
 		$button_order = ($items["quantity"]>0) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
 	}
 }
 ?>
 
 <div class="container">
+	<div class="row header_category" style="border-color: <?=BORDER_COLOUR["$category"]?>;">
+		<h6 class="title_category"><?=$category?></h6>
+	</div>
+	
 	<div class="row"><h3 id="text_itemName"><?=$itemName;?></h3></div>
 	<div class="row">
-		<div class="col-md-4 col-lg-3 text-center">
+		<div class="col-md-4 col-lg-3 text-center p-2">
 			<img src="image?upload=<?=$imageUrl;?>" alt="<?=$itemName;?>" height="200px">
-			<form>
+			<form class="p-2">
 				<div id="price"><?=$price?></div>
+				
+				<div class="text-left pt-2 pb-2">
 				<?=$spinner_html;?>
-				<label>Quantity:</label>
-				<input type="number" class="form-control" id="input_quantity" placeholder="Quantity" value="1" min="1" required>
+				</div>
+				
+				<label class="mb-0 mt-1">Buy:</label>
+				<input type="number" class="form-control mb-2" id="input_quantity" placeholder="Quantity" value="1" min="1" required>
 				<?=$button_order;?>
 			</form>
 		</div>
@@ -89,7 +98,7 @@ else{
 				</li>
 			</ul>
 			
-			<div class="tab-content mb-5" id="profileTabContent">
+			<div class="tab-content mb-5 p-2" id="profileTabContent">
 				<div class="tab-pane fade show active" id="itemDescription" role="tabpanel" aria-labelledby="itemDescription-tab"><p><?=$description;?></p><?=$add_description;?></div>
 				<div class="tab-pane fade" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">
 					<div class="row">

@@ -24,7 +24,10 @@ $result = $link->query($sql);
 ?>
 
 <div class="container">
-	<div class="row mb-5">
+	<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
+		<h6 class="title_category"><?=(isset($category)?$category:"All items")?></h6>
+	</div>
+	<div class="row mb-5 mt-3">
 	<?php
 	if ($result->num_rows > 0) {
 		// output data of each row

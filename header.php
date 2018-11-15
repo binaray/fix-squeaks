@@ -2,13 +2,21 @@
 //header.php: contains constants, and navigation
 //use static linking here
 
+const ITEMS_PER_PAGE=24;
+const BORDER_COLOUR = [
+    "amenities"     => "#fe4848",
+    "materials"    => "#dc3545",
+    "electronics"     => "#2da7ff",
+    "fasteners" => "#c000d7",
+    "paint" => "#ce00c8",
+    "chemicals" => "#28a745",
+]; 
+
 if($_SERVER["HTTPS"] != "on")
 {
     header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
     exit();
 }
-
-const ITEMS_PER_PAGE=24;
 ?>	
 <div class="header pb-3">
 	<nav class="navbar navbar-expand-sm navbar-dark navbar-shrink bg-dark">

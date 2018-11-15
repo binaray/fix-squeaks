@@ -21,9 +21,10 @@ if (isset($_GET['logout'])){
   </head>
   
   <body>
-  
-	<?php include "header.php";
+	<?php include "header.php";?>
 	
+	<div id="main_body">
+	<?php
 	//if item parameter is specified, show item details; otherwise show item list
 	if(isset($_GET["item"]))
 		include "index_containers/item_container.php";
@@ -31,9 +32,10 @@ if (isset($_GET['logout'])){
 		include "index_containers/search_container.php";
 	else
 		include "index_containers/main_container.php";				
+	?>
+	</div>
 	
-	include "footer.php";?>
-	
+	<?php include "footer.php";?>
 	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -100,7 +102,14 @@ if (isset($_GET['logout'])){
 			});
 			
 			function updateDivs(){
-				$("#price").text(current_item["price"]);
+				let text_price="";
+				if(current_item["price"]){
+					text_price="Brand new at: "+Number(current_item["price"]).toFixed(2)+" SGD";
+				}else{
+					log(current_item["price"]);
+					text_price="Price unavailable";
+				}
+				$("#price").text(text_price);
 				$("#input_price").val(current_item["price"]);
 				$("#text_itemDescription").text(current_item["description"]);
 				if(current_item["quantity"]>0){
