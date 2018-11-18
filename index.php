@@ -83,12 +83,12 @@ if (isset($_GET['logout'])){
 	
   <div class="container">
     <div id="carousel_main" class="carousel slide mx-auto pb-3" data-ride="carousel">
-      <!-- Indicators -->
+      <!-- Indicators >
       <ol class="carousel-indicators">
         <li data-target="#carousel_main" data-slide-to="0" class="active"></li>
         <li data-target="#carousel_main" data-slide-to="1"></li>
         <li data-target="#carousel_main" data-slide-to="2"></li>
-      </ol>
+      </ol-->
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner">
