@@ -22,18 +22,19 @@ nav{
 
 body {
 	position: relative;
-	min-height: 100vh;
+	min-height: 100%;
     background: #fff;
     color: #222;
 }
 #main_body{
-	padding-bottom:40px;
+	padding-top: 20px;
+	padding-bottom:80px;
 }
 footer {
 	position:absolute;
 	bottom:0;
 	width:100%;
-	height:40px;			/* Height of the footer */
+	height:50px;			/* Height of the footer */
 }
 
 .overlay{
@@ -66,6 +67,85 @@ footer {
 	margin-top: 1rem;
 }
 
+#form_buy{
+	background: #f2faff;
+	border: #c0c0c0 1px solid;
+	border-radius: 5px;
+}
+
+/*sidebar navigation*/
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+.bt-div{
+	border-bottom: #565656 1px solid;
+}
+.sidenav form {
+    padding: 8px 32px 8px 32px;
+    transition: 0.3s;
+}
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    font-size: 36px;
+    margin-right: 15px;
+}
+#main {display: none;}
+#main {
+	float: right;
+    transition: margin-right .5s;
+    
+}
+a.openNav {
+    font-size: 30px;
+    color: #ffffff;
+    text-decoration: none;
+}
+.sidenav .nav-link {
+	font-size: 13px;
+	font-weight: bold;
+}
+.mob-ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.sidenav li{
+	padding: 0 3px !important;
+    position: relative;
+}
+.sidenav li a {
+    padding-bottom: 15px;
+    text-transform: uppercase;
+}
+.sidenav li form {
+    padding-bottom: 15px;
+    text-transform: uppercase;
+}
+.sidenav ul li:hover .nav-link {
+    color: #008ba3;
+}
 
 /*----------------------item/text elements--------------------*/
 .header_category{

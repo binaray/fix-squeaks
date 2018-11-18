@@ -1,9 +1,9 @@
 <?php
-if (!is_numeric($_GET["item"])) {
+if (!is_numeric($_GET["id"])) {
 	echo "Invalid Item!";	
 }
 else{
-	$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["item"]}";
+	$sql="SELECT * FROM Inventory WHERE itemId = {$_GET["id"]}";
 	$result = $link->query($sql);
 	while($row = $result->fetch_assoc()) {
 		if ($result->num_rows== 0) echo "No such item!";
@@ -60,6 +60,7 @@ else{
 	//----------------------------------single item------------------------------------------//
 	else{
 		$multi_item_disp=false;
+		$stock_quantity = $items["quantity"];
 		$price = (empty($items["price"])) ? "Price unavailable" : "Brand new at: $".number_format($items["price"],2);
 		$button_order = ($items["quantity"]>0) ? '<button id="button_addToCart" type="button" class="btn btn-outline-primary">Add to cart</button>' : '<button type="button" class="btn btn-outline-primary">No stock</button>';
 	}
@@ -82,9 +83,12 @@ else{
 				<?=$spinner_html;?>
 				</div>
 				
-				<label class="mb-0 mt-1">Buy:</label>
-				<input type="number" class="form-control mb-2" id="input_quantity" placeholder="Quantity" value="1" min="1" required>
-				<?=$button_order;?>
+				<div id="form_buy" class="text-left p-3">
+					<p class="text-center p-0 m-0">Available stock: <span id="text_stock"><?=(isset($stock_quantity) ? $stock_quantity : "0")?></span></p>
+					<label class="mb-0 mt-1">Buy:</label>
+					<input type="number" class="form-control mb-2" id="input_quantity" placeholder="Quantity" value="1" min="1" required>
+					<div class="text-right"><?=$button_order;?></div>
+				</div>
 			</form>
 		</div>
 								
@@ -108,14 +112,16 @@ else{
 					<?php
 					//TODO: swap to ajax for performance
 					//----------------------------------Pull user listings------------------------------------//
-					$sql="SELECT * FROM Listings WHERE itemId = {$_GET["item"]} ORDER BY price";
+					$sql="SELECT * FROM Listings WHERE itemId = {$_GET["id"]} ORDER BY price";
 					$result = $link->query($sql);
+					$disp_bg = true;
+					
 					while($row = $result->fetch_assoc()) {
 						if ($result->num_rows== 0) echo "No listings yet!";						
-						echo		'<div class="row item_listing">
-										<div class="col-2 listingId">'.$row["listingId"].'</div><div class="col-6 listingProperties">'.$row["properties"].'</div><div class="col-2 listingPrice">'.$row["price"].'</div><div class="col-2 listingStock">'.$row["quantity"].'</div>
-									</div>';
-						
+						echo($disp_bg ?	'<div class="row item_listing pt-2 pb-2" style="background: #ebf8ff;">' : '<div class="row item_listing pt-2 pb-2">');
+						echo'	<div class="col-2 listingId">'.$row["listingId"].'</div><div class="col-6 listingProperties">'.$row["properties"].'</div><div class="col-2 listingPrice">'.$row["price"].'</div><div class="col-2 listingStock">'.$row["quantity"].'</div>
+							</div>';
+						$disp_bg = !$disp_bg;
 					}
 					?>
 				</div>

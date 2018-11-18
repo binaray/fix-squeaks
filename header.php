@@ -18,67 +18,109 @@ if($_SERVER["HTTPS"] != "on")
     exit();
 }
 ?>	
-<div class="header pb-3">
-	<nav class="navbar navbar-expand-sm navbar-dark navbar-shrink bg-dark">
+<div class="header">
+	<nav class="navbar navbar-expand-lg navbar-dark navbar-shrink bg-dark">
       <a class="navbar-brand" href="/">Pipsqueak</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+      <button href="javascript:void(0)" class="navbar-toggler openNav" onclick="openNav()" type="button" >
         <span class="navbar-toggler-icon"></span>
       </button>
+	  <div id="main">
+		<a href="javascript:void(0)" class="openNav"><span class="fa fa-bars" onclick="openNav()"></span></a>
+	  </div>
 
-      <div class="collapse navbar-collapse" id="navbarsExample02">
-        <form class="form-inline mr-auto" action="/" method="get">
-          <input name="search" class="form-control form-control-sm" type="text" placeholder="Search item.." style="width: 250px;">
-        </form>
+		<div id="mySidenav" class="sidenav">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+		  <ul class="mob-ul">
+			<li class="nav-item">
+				<form action="/items" method="get">
+				  <input name="search" class="form-control form-control-sm" type="text" placeholder="Search item...">
+				</form>
+			</li>
+			<div class="dropdown">
+			  <li class="bt-div" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link" href="#">Browse by category</a>
+			  </li>
+			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 100%; border-radius: 0;">
+				<a class="dropdown-item" href="/items">All</a>
+				<a class="dropdown-item" href="/items?category=electronics">Electronics</a>
+				<a class="dropdown-item" href="/items?category=materials">Material</a>
+				<a class="dropdown-item" href="/items?category=fasteners">Fasteners</a>
+				<a class="dropdown-item" href="/items?category=paint">Paint</a>
+				<a class="dropdown-item" href="/items?category=chemicals">Chemicals</a>
+				<a class="dropdown-item" href="/items?category=amenities">Amenities</a>
+			  </div>
+			</div>
+			
+			<li class="nav-item"><a class="nav-link" href="/checkout">Cart</a></li>
+			<?php
+			if (!isset($_SESSION['email']))
+				echo'
+			<li class="nav-item button_login"><a class="nav-link" href="#">Login</a></li>
+			<li class="nav-item button_register bt-div"><a class="nav-link" href="#">Register</a></li>';
+			else
+				echo '
+			<li class="nav-item bt-div"><a class="nav-link" href="/?logout=true">Logout</a></li>';
+			?>
+			<li class="nav-item"><a class="nav-link" href="/orders">Orders</a></li>
+			<li class="nav-item bt-div"><a class="nav-link" href="/sell">Sell</a></li>
+			
+		  </ul>
+		</div>
 		
-		<ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/checkout">Cart</a>
-          </li>
-		<?php
-		if (!isset($_SESSION['email']))
-			echo'
-          <li class="nav-item" id="button_login">
-            <a class="nav-link" href="#">Login</a>
-          </li>
-          <li class="nav-item" id="button_register">
-            <a class="nav-link" href="#">Register</a>
-          </li>';
-		else
-			echo '
-          <li class="nav-item">
-            <a class="nav-link" href="/?logout=true">Logout</a>
-          </li>';
-		?>
-        </ul>
-      </div>
+		<div class="collapse navbar-collapse" id="navbarsExample02">
+			<form class="form-inline mr-auto" action="/items" method="get">
+			  <input name="search" class="form-control form-control-sm" type="text" placeholder="Search item..." style="width: 250px;">
+			</form>
+
+			<ul class="navbar-nav">
+			  <li class="nav-item">
+				<a class="nav-link" href="/checkout">Cart</a>
+			  </li>
+			<?php
+			if (!isset($_SESSION['email']))
+				echo'
+			  <li class="nav-item button_login">
+				<a class="nav-link" href="#">Login</a>
+			  </li>
+			  <li class="nav-item button_register">
+				<a class="nav-link" href="#">Register</a>
+			  </li>';
+			else
+				echo '
+			  <li class="nav-item">
+				<a class="nav-link" href="/?logout=true">Logout</a>
+			  </li>';
+			?>
+			</ul>
+		</div>
     </nav>
 			
-	<nav class="navbar navbar-expand-lg navbar-light bg-light rounded" style="padding: .25rem 0 0 0">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light rounded d-none d-lg-block" style="padding: .25rem 0 0 0">
 	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	  </button>
 	  <div class="collapse navbar-collapse justify-content-md-center" id="navbar">
 		<ul class="navbar-nav">
 		  <li class="nav-item filter-button" data-filter="all">
-			<a class="nav-link" href="/">All</a>
+			<a class="nav-link" href="/items">All</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="material">
-			<a class="nav-link" href="/?category=materials">Material</a>
+			<a class="nav-link" href="/items?category=materials">Material</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="electronics">
-			<a class="nav-link" href="/?category=electronics">Electronics</a>
+			<a class="nav-link" href="/items?category=electronics">Electronics</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="fasteners">
-			<a class="nav-link" href="/?category=fasteners">Fasteners</a>
+			<a class="nav-link" href="/items?category=fasteners">Fasteners</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="paint">
-			<a class="nav-link" href="/?category=paint">Paint</a>
+			<a class="nav-link" href="/items?category=paint">Paint</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="chemicals">
-			<a class="nav-link" href="/?category=chemicals">Chemicals</a>
+			<a class="nav-link" href="/items?category=chemicals">Chemicals</a>
 		  </li>
 		  <li class="nav-item filter-button" data-filter="amenities">
-			<a class="nav-link" href="/?category=amenities">Amenities</a>
+			<a class="nav-link" href="/items?category=amenities">Amenities</a>
 		  </li>
 		  <li class="nav-item disabled">
 			<div class="nav-link">|</div>
@@ -108,10 +150,6 @@ if($_SERVER["HTTPS"] != "on")
 	  </div>
 	</nav>
 
-	<!--Announcements-->
-	<div class="alert alert-warning m-3" role="alert">
-	  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
-	</div>
 </div>
 
 <div class="fixed-top overlay">
@@ -137,7 +175,7 @@ if (!isset($_SESSION['email'])){
 					</div>
 					<input type="tel" class="form-control" id="validationTooltipUsername" name="phone" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
 				</div>
-				<div class="form-group">
+				<div class="form-group mt-3">
 					<input type="submit" class="btn btn-primary" value="Submit">
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
@@ -149,14 +187,14 @@ if (!isset($_SESSION['email'])){
 			<form enctype="multipart/form-data" action="logon/login" method="post">
 				<input type="text" name="email" class="form-control" placeholder="Email" required>
 				<input type="password" name="password" class="form-control" placeholder="Password" required>
-				<div class="form-group">
+				<div class="form-group mt-3">
 					<input type="submit" class="btn btn-primary" value="Submit">
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
 			</form>
 		</div>';
 }
-if(isset($_GET["item"])){
+if(isset($_GET["id"])){
 	echo'<div class="overlay_listing overlay_form">
 			<h3 id="overlay_header_listing" class="overlay_header">Selected Listing:</h3>
 			<h4 id="overlay_listingProperties"></h4>
@@ -165,7 +203,7 @@ if(isset($_GET["item"])){
 				<p id="overlay_listingStock"></p>
 				<label>Quantity:</label>
 				<input id="input_listingQuantity" type="number" class="form-control" placeholder="Quantity" value="1" step=1 min=1 required>
-				<div class="form-group">
+				<div class="form-group mt-3">
 					<button id="button_addListingToCart" type="button" class="btn btn-primary">Add Listed item to cart</button>
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
@@ -173,4 +211,9 @@ if(isset($_GET["item"])){
 		</div>';
 }
 ?>
+</div>
+
+<!--Announcements-->
+<div id="announcement" class="alert alert-warning m-3 pb-3" role="alert">
+  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
 </div>

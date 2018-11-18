@@ -9,6 +9,7 @@ $(document).ready(function () {
 		
 		$.get("ajax/items?item="+itemId, function(data) {
 			$('#overlay_sell').show();
+			$('#form_sell').show();
 			$('#overlay_sell_title').text("Sell: "+data.itemName);
 			$('#input_itemId').val(itemId);
 			if(data.options==null){
@@ -43,7 +44,8 @@ $(document).ready(function () {
 			}
 		}, "json");
 	});
-
+	
+	//overriden by nav
 	$('.button_cancel').click(function(){
 		$('#overlay_sell').hide();
 	});

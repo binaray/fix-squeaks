@@ -29,10 +29,10 @@ $result = $link->query($sql);
 			//single item type
 			if(empty($row["options"])){
 				$item = json_decode($row["items"], true);
-				$price = (empty($item["price"])) ? "Price unavailable" : "$".number_format($item["price"],2);
+				$price = (empty($item["price"])) ? "Price unavailable" : number_format($item["price"],2)." SGD";
 				
 				echo 
-					'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+					'<a href="?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 						<div class="img-thumbnail item">
 							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 							<div class="caption">
@@ -50,19 +50,26 @@ $result = $link->query($sql);
 				$count=0;
 				
 				foreach ($items as $item){
-					$avg_price += $item["price"];
-					$count++;
+					if (is_numeric($item["price"]))
+					{
+						if (!isset($from_price)) $from_price = $item["price"];
+						else{
+							if ($item["price"] < $from_price) $from_price = $item["price"];
+						}
+						$avg_price += $item["price"];
+						$count++;
+					}				
 				}
 				$avg_price /= $count;
-				$avg_price = (empty($avg_price)) ? "Price unavailable" : "$".number_format($avg_price,2);
+				$from_price = (empty($from_price)) ? "Unavailable" : "From ".number_format($from_price,2)." SGD";
 				
 				echo 
-					'<a href="?item='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+					'<a href="?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
 						<div class="img-thumbnail item">
 							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
 							<div class="caption">
 								<div align="center" class="text_item">'.$row["itemName"].'</div>
-								<div align="center" class="text_price">'.$avg_price.'</div>
+								<div align="center" class="text_price">'.$from_price.'</div>
 							</div>
 						</div>
 					</a>';

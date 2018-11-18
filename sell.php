@@ -58,14 +58,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   
   <body>
 	<div id="overlay_sell" class="fixed-top overlay">
-		<div class="overlay_form">
+		<div id="form_sell" class="overlay_form">
 			<h3 id="overlay_sell_title" class="overlay_header">Sell Item</h3>
 			<form enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 				<input id="input_itemId" type="number" name="itemId" style="display: none;" required>
-				<input type="number" name="quantity" class="form-control" placeholder="qty" min="1" step="1" required>
+				<input type="number" name="quantity" class="form-control" placeholder="Your stock quantity" min="1" step="1" required>
 				<input type="number" name="price" class="form-control" placeholder="per price" min="0.00" step="0.01" required>
 				<div id="spinner_html"></div>
-				<div class="form-group">
+				<div class="form-group mt-3">
 					<input type="submit" class="btn btn-primary" value="Submit">
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
@@ -140,6 +140,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
 	<script src="js/sell.js"></script>
+	<script src="js/nav.js"></script>
 	<script type="text/javascript">
 	
 	</script>
