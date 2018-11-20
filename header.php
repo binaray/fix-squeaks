@@ -216,6 +216,6 @@ if(isset($_GET["id"])){
 <div class="alert alert-warning mt-3 mb-0 pb-3" role="alert">
 	<div id="button_close_ann" style="position:absolute; top:0; right:10px; cursor: pointer;">x</div>
 	<b>Warning:</b><br>
-	Pipsqueak web is still its beta stage. If you'd like to help Pipsqueak, please send your bug reports, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
+	Pipsqueak web is still its beta stage. If you'd like to help Pipsqueak, please send your bug reports, technical expertise, cheese or well-wishes to her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
 </div>
 </div>
