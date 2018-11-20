@@ -80,156 +80,149 @@ if (isset($_GET['logout'])){
   
   <body>
 	<?php include "header.php";?>
-	
-  <div class="container">
-    <div id="carousel_main" class="carousel slide mx-auto pb-3" data-ride="carousel">
-      <!-- Indicators >
-      <ol class="carousel-indicators">
-        <li data-target="#carousel_main" data-slide-to="0" class="active"></li>
-        <li data-target="#carousel_main" data-slide-to="1"></li>
-        <li data-target="#carousel_main" data-slide-to="2"></li>
-      </ol-->
-
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="http://placehold.it/800x400" alt="...">
-          <div class="carousel-caption">
-            <h3 class="title_category">Welcome!</h3>
-			<p>to Pipsqueak Marketplace. <a href="http://pipsqueak.sg" style="color: #80bdff;">About us</a></p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src="http://placehold.it/800x400" alt="...">
-          <div class="carousel-caption">
-            <h3 class="title_category">Pipsqueak Listings</h3>
-			<p>Sell project materials, buy from others!</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src="http://placehold.it/800x400" alt="...">
-          <div class="carousel-caption">
-            <h3 class="title_category">Pipsqueak Cache</h3>
-			<p>Buy firsthand products from us!</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <a class="carousel-control-prev" href="#carousel_main" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#carousel_main" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
-    </div>
-  </div>
-	  
+		  
 	<div id="main_body">
-	<?php
-$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 6";
-$result = $link->query($sql);
-?>
+	<div class="container mt-0">
+	<div id="carousel_main" class="carousel slide mx-auto pb-4" data-ride="carousel">
+	  <!-- Wrapper for slides -->
+	  <div class="carousel-inner">
+		<div class="carousel-item active">
+		  <img src="http://placehold.it/800x400" alt="...">
+		  <div class="carousel-caption">
+			<h3 class="title_category">Welcome!</h3>
+			<p>to Pipsqueak Marketplace. <a href="http://pipsqueak.sg" style="color: #80bdff;">About us</a></p>
+		  </div>
+		</div>
+		<div class="carousel-item">
+		  <img src="http://placehold.it/800x400" alt="...">
+		  <div class="carousel-caption">
+			<h3 class="title_category">Pipsqueak Listings</h3>
+			<p>Sell project materials, buy from others!</p>
+		  </div>
+		</div>
+		<div class="carousel-item">
+		  <img src="http://placehold.it/800x400" alt="...">
+		  <div class="carousel-caption">
+			<h3 class="title_category">Pipsqueak Cache</h3>
+			<p>Buy firsthand products from us!</p>
+		  </div>
+		</div>
+	  </div>
 
-<div class="container">
-	<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
-		<h6 class="title_category">Featured items</h6>
+	  <!-- Controls -->
+	  <a class="carousel-control-prev" href="#carousel_main" data-slide="prev">
+		<span class="carousel-control-prev-icon"></span>
+	  </a>
+	  <a class="carousel-control-next" href="#carousel_main" data-slide="next">
+		<span class="carousel-control-next-icon"></span>
+	  </a>
 	</div>
-	<div class="row mb-5 mt-3">
-	<?php
-	if ($result->num_rows > 0) {
-		// output data of each row
-		while($row = $result->fetch_assoc()) {
-			
-			$imageUrl = $row["imageUrl"];
-			
-			//single item type
-			if(empty($row["options"])){
-				$item = json_decode($row["items"], true);
-				$price = (empty($item["price"])) ? "Price unavailable" : number_format($item["price"],2)." SGD";
-				
-				echo 
-					'<a href="items?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
-						<div class="img-thumbnail item">
-							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
-							<div class="caption">
-								<div align="center" class="text_item">'.$row["itemName"].'</div>
-								<div align="center" class="text_price">'.$price.'</div>
-							</div>
-						</div>
-					</a>';
-			}
-			
-			//item multi type
-			else{
-				$items = json_decode($row["items"], true);
-				$avg_price = 0;
-				$count=0;
-				
-				foreach ($items as $item){
-					if (is_numeric($item["price"]))
-					{
-						if (!isset($from_price)) $from_price = $item["price"];
-						else{
-							if ($item["price"] < $from_price) $from_price = $item["price"];
-						}
-						$avg_price += $item["price"];
-						$count++;
-					}				
-				}
-				$avg_price /= $count;
-				$from_price = (empty($from_price)) ? "Unavailable" : "From ".number_format($from_price,2)." SGD";
-				
-				echo 
-					'<a href="items?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
-						<div class="img-thumbnail item">
-							<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
-							<div class="caption">
-								<div align="center" class="text_item">'.$row["itemName"].'</div>
-								<div align="center" class="text_price">'.$from_price.'</div>
-							</div>
-						</div>
-					</a>';
-			}
-		}
-	} else {
-		echo "0 results";
-	}
-	?>
 	</div>
 	
-	<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
-		<h6 class="title_category">Upcoming features</h6>
-	</div>
-	<div class="row mt-3">
-        <div class="col-md-6">
-          <div class="card flex-md-row mb-4 shadow-sm h-md-250">
-            <div class="card-body d-flex flex-column align-items-start">
-              <h3 class="mb-0">
-                <a class="text-dark" href="#">Tompang@Pipsqueak</a>
-              </h3>
-              <div class="mb-1 text-muted">Nov 12</div>
-              <p class="card-text mb-auto">Collaborate with friends and strangers for cheaper bulk orders!</p>
-            </div>
-            <img class="card-img-right flex-auto d-none d-lg-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1672516c977%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A13pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1672516c977%22%3E%3Crect%20width%3D%22200%22%20height%3D%22250%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2256.203125%22%20y%3D%22131%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card flex-md-row mb-4 shadow-sm h-md-250">
-            <div class="card-body d-flex flex-column align-items-start">
-              <h4 class="mb-0">
-                <a class="text-dark" href="#">Datasheets</a>
-              </h4>
-              <div class="mb-1 text-muted">Nov 11</div>
-              <p class="card-text mb-auto">Enjoy documentation on electronics at the marketplace without having to search elsewhere.</p>
-            </div>
-            <img class="card-img-right flex-auto d-none d-lg-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1672516c979%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A13pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1672516c979%22%3E%3Crect%20width%3D%22200%22%20height%3D%22250%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2256.203125%22%20y%3D%22131%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 200px; height: 250px;">
-          </div>
-        </div>
-      </div>
-</div>
+	<?php
+	$sql="SELECT itemId, itemName, imageUrl, options, items FROM Inventory ORDER BY itemId DESC LIMIT 6";
+	$result = $link->query($sql);
+	?>
 
-<?php $link->close();?>
+	<div class="container">
+		<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
+			<h6 class="title_category">Featured items</h6>
+		</div>
+		<div class="row mb-5 mt-3">
+		<?php
+		if ($result->num_rows > 0) {
+			// output data of each row
+			while($row = $result->fetch_assoc()) {
+				
+				$imageUrl = $row["imageUrl"];
+				
+				//single item type
+				if(empty($row["options"])){
+					$item = json_decode($row["items"], true);
+					$price = (empty($item["price"])) ? "Price unavailable" : number_format($item["price"],2)." SGD";
+					
+					echo 
+						'<a href="items?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+							<div class="img-thumbnail item">
+								<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+								<div class="caption">
+									<div align="center" class="text_item">'.$row["itemName"].'</div>
+									<div align="center" class="text_price">'.$price.'</div>
+								</div>
+							</div>
+						</a>';
+				}
+				
+				//item multi type
+				else{
+					$items = json_decode($row["items"], true);
+					$avg_price = 0;
+					$count=0;
+					
+					foreach ($items as $item){
+						if (is_numeric($item["price"]))
+						{
+							if (!isset($from_price)) $from_price = $item["price"];
+							else{
+								if ($item["price"] < $from_price) $from_price = $item["price"];
+							}
+							$avg_price += $item["price"];
+							$count++;
+						}				
+					}
+					$avg_price /= $count;
+					$from_price = (empty($from_price)) ? "Unavailable" : "From ".number_format($from_price,2)." SGD";
+					
+					echo 
+						'<a href="items?id='.$row["itemId"].'" class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+							<div class="img-thumbnail item">
+								<img src="image?upload='.$imageUrl.'" alt="'.$row["itemName"].'" width="100%" height="150">
+								<div class="caption">
+									<div align="center" class="text_item">'.$row["itemName"].'</div>
+									<div align="center" class="text_price">'.$from_price.'</div>
+								</div>
+							</div>
+						</a>';
+				}
+			}
+		} else {
+			echo "0 results";
+		}
+		?>
+		</div>
+		
+		<div class="row header_category" style="border-color: <?=(isset($category) ? BORDER_COLOUR["$category"] : 'grey')?>;">
+			<h6 class="title_category">Upcoming features</h6>
+		</div>
+		<div class="row mt-3">
+			<div class="col-md-6">
+			  <div class="card flex-md-row mb-4 shadow-sm h-md-250">
+				<div class="card-body d-flex flex-column align-items-start">
+				  <h4 class="mb-0">
+					<a class="text-dark" href="#">Tompang@Pipsqueak</a>
+				  </h4>
+				  <!--div class="mb-1 text-muted">Nov 12</div-->
+				  <p class="card-text mb-auto">Collaborate with friends and strangers for cheaper bulk orders!</p>
+				</div>
+				<img class="card-img-right flex-auto d-none d-lg-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1672516c977%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A13pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1672516c977%22%3E%3Crect%20width%3D%22200%22%20height%3D%22250%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2256.203125%22%20y%3D%22131%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+			  </div>
+			</div>
+			<div class="col-md-6">
+			  <div class="card flex-md-row mb-4 shadow-sm h-md-250">
+				<div class="card-body d-flex flex-column align-items-start">
+				  <h4 class="mb-0">
+					<a class="text-dark" href="#">Datasheets</a>
+				  </h4>
+				  <!--div class="mb-1 text-muted">Nov 11</div-->
+				  <p class="card-text mb-auto">Enjoy documentation on electronics at the marketplace without having to search elsewhere.</p>
+				</div>
+				<img class="card-img-right flex-auto d-none d-lg-block" data-src="holder.js/200x250?theme=thumb" alt="Thumbnail [200x250]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20250%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1672516c979%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A13pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1672516c979%22%3E%3Crect%20width%3D%22200%22%20height%3D%22250%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2256.203125%22%20y%3D%22131%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 200px; height: 250px;">
+			  </div>
+			</div>
+		</div>
+	</div>
+
+	<?php $link->close();?>
 	
 	<?php include "footer.php";?>
 	

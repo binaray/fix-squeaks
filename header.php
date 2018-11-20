@@ -3,13 +3,21 @@
 //use static linking here
 
 const ITEMS_PER_PAGE=24;
+const CATEGORIES = [
+    //"amenities"     => "#fe4848",
+    "Materials",
+    "Electronics",
+    "Adhesives",
+    "ICs",
+    "Stationery"
+];
 const BORDER_COLOUR = [
-    "amenities"     => "#fe4848",
+    //"amenities"     => "#fe4848",
     "materials"    => "#dc3545",
     "electronics"     => "#2da7ff",
-    "fasteners" => "#c000d7",
-    "paint" => "#ce00c8",
-    "chemicals" => "#28a745",
+    "adhesives" => "#c000d7",
+    "ics" => "#ce00c8",
+    "stationery" => "#28a745",
 ]; 
 
 if($_SERVER["HTTPS"] != "on")
@@ -42,12 +50,11 @@ if($_SERVER["HTTPS"] != "on")
 			  </li>
 			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 100%; border-radius: 0;">
 				<a class="dropdown-item" href="/items">All</a>
-				<a class="dropdown-item" href="/items?category=electronics">Electronics</a>
-				<a class="dropdown-item" href="/items?category=materials">Material</a>
-				<a class="dropdown-item" href="/items?category=fasteners">Fasteners</a>
-				<a class="dropdown-item" href="/items?category=paint">Paint</a>
-				<a class="dropdown-item" href="/items?category=chemicals">Chemicals</a>
-				<a class="dropdown-item" href="/items?category=amenities">Amenities</a>
+				<?php
+				foreach (CATEGORIES as $category){
+					echo '<a class="dropdown-item" href="/items?category='.strtolower($category).'">'.$category.'</a>';
+				}
+				?>
 			  </div>
 			</div>
 			
@@ -104,24 +111,15 @@ if($_SERVER["HTTPS"] != "on")
 		  <li class="nav-item filter-button" data-filter="all">
 			<a class="nav-link" href="/items">All</a>
 		  </li>
-		  <li class="nav-item filter-button" data-filter="material">
-			<a class="nav-link" href="/items?category=materials">Material</a>
-		  </li>
-		  <li class="nav-item filter-button" data-filter="electronics">
-			<a class="nav-link" href="/items?category=electronics">Electronics</a>
-		  </li>
-		  <li class="nav-item filter-button" data-filter="fasteners">
-			<a class="nav-link" href="/items?category=fasteners">Fasteners</a>
-		  </li>
-		  <li class="nav-item filter-button" data-filter="paint">
-			<a class="nav-link" href="/items?category=paint">Paint</a>
-		  </li>
-		  <li class="nav-item filter-button" data-filter="chemicals">
-			<a class="nav-link" href="/items?category=chemicals">Chemicals</a>
-		  </li>
-		  <li class="nav-item filter-button" data-filter="amenities">
-			<a class="nav-link" href="/items?category=amenities">Amenities</a>
-		  </li>
+		  <?php
+			foreach (CATEGORIES as $category){
+				echo'
+					<li class="nav-item filter-button" data-filter="'.strtolower($category).'">
+						<a class="nav-link" href="/items?category='.strtolower($category).'">'.$category.'</a>
+					</li>
+				';
+			}
+		  ?>
 		  <li class="nav-item disabled">
 			<div class="nav-link">|</div>
 		  </li>		  
@@ -214,6 +212,10 @@ if(isset($_GET["id"])){
 </div>
 
 <!--Announcements-->
-<div id="announcement" class="alert alert-warning m-3 pb-3" role="alert">
-  Warning: Pipsqueak web is still facing teething issues. While it can be used to browse through listings, Pipsqueak still doesn't really know what to do if you send commands to her through the web for now. If you'd like to help Pipsqueak by sending your suggestions, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
+<div id="announcement" class="container mb-0 mt-0 p-0">
+<div class="alert alert-warning mt-3 mb-0 pb-3" role="alert">
+	<div id="button_close_ann" style="position:absolute; top:0; right:10px; cursor: pointer;">x</div>
+	<b>Warning:</b><br>
+	Pipsqueak web is still its beta stage. If you'd like to help Pipsqueak, please send your bug reports, technical expertise, cheese or well-wishes, you may contact her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
+</div>
 </div>

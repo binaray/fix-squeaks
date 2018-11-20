@@ -13,6 +13,10 @@ function closeNav() {
 }
 
 $(document).ready(function () {
+	$('#button_close_ann').click(function(){
+		$('#announcement').hide();
+	});
+	
 	$('.button_login').click(function(){
 		$('.overlay').show();
 		$('.overlay_login').show();
