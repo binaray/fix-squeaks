@@ -88,7 +88,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <body class="bg-light">
     <div class="container">
         <h2>Login</h2>
-        <p>Please fill this form to create an account.</p>
+        <p>Please fill this form to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).(empty($_GET["redirect"])) ? "" : "?redirect=".$_GET["redirect"]; ?>" method="post">
             <div class="form-group">
                 <label>Email</label>

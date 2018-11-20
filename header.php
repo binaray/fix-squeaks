@@ -20,7 +20,7 @@ if($_SERVER["HTTPS"] != "on")
 ?>	
 <div class="header">
 	<nav class="navbar navbar-expand-lg navbar-dark navbar-shrink" style="background-color: #000000!important;">
-      <a class="navbar-brand" href="/">Pipsqueak</a>
+      <a class="navbar-brand" href="/">Pipsqueak Marketplace</a>
       <button href="javascript:void(0)" class="navbar-toggler openNav" onclick="openNav()" type="button" >
         <span class="navbar-toggler-icon"></span>
       </button>
