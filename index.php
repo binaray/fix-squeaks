@@ -204,7 +204,7 @@ if (isset($_GET['logout'])){
 				  <!--div class="mb-1 text-muted">Nov 12</div-->
 				  <p class="card-text mb-auto">Collaborate with friends and strangers for cheaper bulk orders!</p>
 				</div>
-				<img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="assets/images/tompang.png">
+				<!--img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="assets/images/tompang.png"-->
 			  </div>
 			</div>
 			<div class="col-md-6">
@@ -216,7 +216,7 @@ if (isset($_GET['logout'])){
 				  <!--div class="mb-1 text-muted">Nov 11</div-->
 				  <p class="card-text mb-auto">Enjoy documentation on electronics at the marketplace without having to search elsewhere.</p>
 				</div>
-				<img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x250]" src="assets/images/datasheets.png" style="width: 200px; height: 250px;">
+				<!--img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x250]" src="assets/images/datasheets.png" style="width: 200px; height: 250px;"-->
 			  </div>
 			</div>
 		</div>

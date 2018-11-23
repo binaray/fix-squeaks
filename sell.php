@@ -111,7 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		<input type="text" class="form-control" placeholder="Enter to search..." name="search" id="searchInput" class="search">
 		<input type="submit" class="btn btn-outline-primary" value="Submit">
 	</form>
-	<a href="/index.php">Not listed? Send in a request to to list your item!</a>
+	<a href="mailto:ray_cheng@mymail.sutd.edu.sg">Not listed? Send in a request to to list your item!</a>
 	
 	<?php
 	if(isset($_GET["search"])){
