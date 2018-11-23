@@ -51,8 +51,8 @@ if($_SERVER["HTTPS"] != "on")
 			  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 100%; border-radius: 0;">
 				<a class="dropdown-item" href="/items">All</a>
 				<?php
-				foreach (CATEGORIES as $category){
-					echo '<a class="dropdown-item" href="/items?category='.strtolower($category).'">'.$category.'</a>';
+				foreach (CATEGORIES as $disp_category){
+					echo '<a class="dropdown-item" href="/items?category='.strtolower($disp_category).'">'.$disp_category.'</a>';
 				}
 				?>
 			  </div>
@@ -112,10 +112,10 @@ if($_SERVER["HTTPS"] != "on")
 			<a class="nav-link" href="/items">All</a>
 		  </li>
 		  <?php
-			foreach (CATEGORIES as $category){
+			foreach (CATEGORIES as $disp_category){
 				echo'
-					<li class="nav-item filter-button" data-filter="'.strtolower($category).'">
-						<a class="nav-link" href="/items?category='.strtolower($category).'">'.$category.'</a>
+					<li class="nav-item filter-button" data-filter="'.strtolower($disp_category).'">
+						<a class="nav-link" href="/items?category='.strtolower($disp_category).'">'.$disp_category.'</a>
 					</li>
 				';
 			}
