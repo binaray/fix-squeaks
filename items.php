@@ -124,7 +124,7 @@ if (isset($_GET['logout'])){
 					$("#button_addMultiToCart").click(function(){
 						let url = new URL(window.location.href);
 						let itemToAdd = {
-							itemId : url.searchParams.get("id"),
+							itemId : '.$_GET["id"].',
 							itemName : $("#text_itemName").text(),
 							properties : current_property,
 							quantity : $("#input_quantity").val(),
@@ -149,7 +149,7 @@ if (isset($_GET['logout'])){
 		$("#button_addToCart").click(function(){
 			let url = new URL(window.location.href);
 			let itemToAdd = {
-				itemId : url.searchParams.get("item"),
+				itemId : <?=$_GET["id"]?>,
 				itemName : $("#text_itemName").text(),
 				quantity : $("#input_quantity").val(),
 				price : current_item["price"]
