@@ -66,6 +66,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			echo "Error updating record: " . $conn->error;
 		}
 	}
+	else if(isset($_POST["review"])) { 
+		$sql = "UPDATE Orders SET status='TO REVIEW' WHERE orderId={$orderId}";
+		if ($link->query($sql) === TRUE) {
+			echo "Record updated successfully";
+		} else {
+			echo "Error updating record: " . $conn->error;
+		}
+	}
 	else if(isset($_POST["reject"])) { 
 		$sql = "UPDATE Orders SET status='REJECTED' WHERE orderId={$orderId}";
 		if ($link->query($sql) === TRUE) {
@@ -95,7 +103,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	let log = console.log.bind(console);
 	
 	$(document).ready(function () {
-		window.location.replace("orders");
+		window.location.replace("../orders");
 		<?php 
 			// broken mess
 			// $zap = "https://hooks.zapier.com/hooks/catch/3959751/ea50h0/";
