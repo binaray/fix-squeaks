@@ -110,7 +110,7 @@ require_once "../_config.php";
 			</div>
 			<div class="tab-pane fade" id="statusSuccess" role="tabpanel" aria-labelledby="statusSuccess-tab">
 				<?php			
-				$sql = "SELECT * FROM Orders INNER JOIN Users ON Orders.userId = Users.userId WHERE Orders.status = 'SUCCESS'";
+				$sql = "SELECT * FROM Orders INNER JOIN Users ON Orders.userId = Users.userId WHERE Orders.status = 'APPROVED'";
 				$result = $link->query($sql);
 				while($row = $result->fetch_assoc()) {
 					echo "<div class='row order_item pt-1 pb-1'>
