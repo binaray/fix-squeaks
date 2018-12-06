@@ -10,10 +10,12 @@ if(isset($_GET["action"])){
 	}	
 	if(isset($_SESSION["cart"]) && $_GET["action"]=="purchase"){
 		require_once "_config.php";
-		$sql = "SELECT userId FROM Users WHERE email = '{$_SESSION['email']}'";
+		$sql = "SELECT userId, name, phone FROM Users WHERE email = '{$_SESSION['email']}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$userId=$row["userId"];
+			$name=$row["name"];
+			$phone=$row["phone"];
 		}
 		
 		if (isset($userId)){			
@@ -72,6 +74,16 @@ if(isset($_GET["action"])){
 			}
 			
 			if (!empty($itemsBought)){
+				
+				//tele notification string
+				$itemString = "";
+				foreach ($itemsBought as $item){
+					$prop="";
+					if (!empty($item["properties"])){
+						$prop.="(".implode(" | ",$item["properties"]).") ";
+					}
+					$itemString.="itemId: {$item["itemId"]} {$item["itemName"]} {$prop}qty: {$item["quantity"]}\n\n";
+				}
 				$itemsBought = json_encode($itemsBought);
 				$status = "PENDING";	
 				$sql = "INSERT INTO Orders (userId, itemsBought, status) VALUES (?, ?, ?)";	
@@ -84,6 +96,11 @@ if(isset($_GET["action"])){
 						// echo "Successfully added to orders!\n";
 						$buy_success=true;
 						unset($_SESSION["cart"]);
+						require_once "ajax/message-telegram.php";
+						
+						$message = "{$name} purchase ordered:\n{$itemString}\n\nContact:\n{$phone}\n{$_SESSION['email']}";
+						
+						messageTelegram($message);
 						// mysqli_stmt_close($stmt);
 						// mysqli_close($link);
 						// header("location: orders?buy=success");
