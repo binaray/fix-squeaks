@@ -10,12 +10,14 @@ if(isset($_GET["action"])){
 	}	
 	if(isset($_SESSION["cart"]) && $_GET["action"]=="purchase"){
 		require_once "_config.php";
-		$sql = "SELECT userId, name, phone FROM Users WHERE email = '{$_SESSION['email']}'";
+		$sql = "SELECT userId, name, phone, telegramId FROM Users WHERE email = '{$_SESSION['email']}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$userId=$row["userId"];
 			$name=$row["name"];
 			$phone=$row["phone"];
+			if (empty($row["telegramId"])) $telegramId="";
+			else $telegramId=$row["telegramId"];
 		}
 		
 		if (isset($userId)){			
@@ -98,7 +100,7 @@ if(isset($_GET["action"])){
 						unset($_SESSION["cart"]);
 						require_once "ajax/message-telegram.php";
 						
-						$message = "{$name} purchase ordered:\n{$itemString}\n\nContact:\n{$phone}\n{$_SESSION['email']}";
+						$message = "{$name} purchase ordered:\n{$itemString}\n\nContact:\n{$phone}\n{$_SESSION['email']}\n{$telegramId}";
 						
 						messageTelegram($message);
 						// mysqli_stmt_close($stmt);

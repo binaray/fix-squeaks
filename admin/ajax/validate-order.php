@@ -1,5 +1,6 @@
 <?php
 session_start();
+//to convert to ajax
 //Check admin email here
 require_once "../../_config.php";
 
@@ -7,55 +8,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$orderId=$_POST["orderId"];
 	
 	if(isset($_POST["issue"])) {
-		$sql = "SELECT Users.userId, Users.name, Users.email, Orders.itemsBought FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
+		$sql = "SELECT Users.userId, Users.name, Users.email, Orders.orderId, Orders.itemsBought FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
-			$itemsBought=json_decode($row["itemsBought"],true);
-			$itemName="";
-			$price="";
-			$quantity="";
-			
-			for ($j=0; $j<sizeof($itemsBought); $j++){
-				if(isset($itemsBought[$j]["properties"])){
-					$itemsBought[$j]["itemName"].=" (";
-					
-					for ($i=0; $i<sizeof($itemsBought[$j]["properties"]); $i++){
-						if ($i==sizeof($itemsBought[$j]["properties"])-1) $itemsBought[$j]["itemName"].=$itemsBought[$j]["properties"][$i].")";
-						else $itemsBought[$j]["itemName"].=$itemsBought[$j]["properties"][$i]." | ";
-					}
-				}
-				if ($j==sizeof($itemsBought)-1){
-					$itemName.=$itemsBought[$j]["itemName"];
-					$price.=$itemsBought[$j]["price"];
-					$quantity.=$itemsBought[$j]["quantity"];
-				}
-				else{
-					$itemName.=$itemsBought[$j]["itemName"].",";
-					$price.=$itemsBought[$j]["price"].",";
-					$quantity.=$itemsBought[$j]["quantity"].",";
-				}
-			}
-			echo "<div class='row'>
-						<div class='col-1 orderId'>".$row["name"]."</div>
-						<div class='col-1 userId'>".$row["email"]."</div>
-						<div class='col-8 itemsBought'>".json_encode($itemsBought)."</div>
-					</div>";
-			$userId = $row["userId"];
-			$name = $row["name"];
+			$itemsBought=$row["itemsBought"];
+			$invNo = $row["orderId"];
+			$clientName = $row["name"];
 			$email = $row["email"];
 		}
 		$date = date_create();
+		$date = date_timestamp_get($date);
 		
 		$data = array(
-			'userId' => $userId,
-			'name' => $name,
+			'invNo' => $invNo,
+			'clientName' => $clientName,
 			'email' => $email,
-			'itemName' => $itemName,
-			'price' => $price,
-			'quantity' => $quantity,
-			'gtt' => $price*$quantity,
-			'dateTimeGenerated' => date_timestamp_get($date)
+			'itemsBought' => $itemsBought,
+			'dateTimeGenerated' => $date
 		 );
+		
+		
 		
 		$jsonEncodedData = json_encode($data);
 		
@@ -95,6 +67,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   </head>
   
   <body>
+		<form id="betapost" action="https://beta.pipsqueak.sg" target="_blank" method="post">
+            <input type="text" name="date" value="<?=$date?>" style="display: none;">
+            <input type="text" name="invNo" value="<?=$invNo?>" style="display: none;">
+            <input type="text" name="clientName" value="<?=$clientName?>" style="display: none;">
+            <input type="text" name="email" value="<?=$email?>" style="display: none;">
+            <input type="text" name="itemsBought" value='<?=$itemsBought?>' style="display: none">
+			
+			<?php
+			if(isset($_POST["issue"]))
+				echo '<input type="submit" class="btn btn-primary" value="Click to generate receipt!" style="">';
+			?>
+        </form>
+		
+		<a href="../orders">Return</a>
+  
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
@@ -103,15 +90,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	let log = console.log.bind(console);
 	
 	$(document).ready(function () {
-		window.location.replace("../orders");
-		<?php 
-			// broken mess
-			// $zap = "https://hooks.zapier.com/hooks/catch/3959751/ea50h0/";
-			// echo '$.post("'.CODOMO_ZAP.'",{item : '.$jsonEncodedData.'}, function(data){
-				// log(data);
-			// });';
-		?>
-		
 	});
 	</script>
 </body>
