@@ -28,7 +28,7 @@ if($_SERVER["HTTPS"] != "on")
 ?>	
 <div class="header">
 	<nav class="navbar navbar-expand-lg navbar-dark navbar-shrink" style="background-color: #000000!important;">
-      <a class="navbar-brand" href="/">Pipsqueak Marketplace</a>
+      <a class="navbar-brand" href="/">Pipsqueak SUTD</a>
       <button href="javascript:void(0)" class="navbar-toggler openNav" onclick="openNav()" type="button" >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -69,7 +69,7 @@ if($_SERVER["HTTPS"] != "on")
 			<li class="nav-item bt-div"><a class="nav-link" href="/?logout=true">Logout</a></li>';
 			?>
 			<li class="nav-item"><a class="nav-link" href="/orders">Orders</a></li>
-			<li class="nav-item bt-div"><a class="nav-link" href="/sell">Sell</a></li>
+			<!--li class="nav-item bt-div"><a class="nav-link" href="/sell">Sell</a></li-->
 			
 		  </ul>
 		</div>
@@ -126,9 +126,9 @@ if($_SERVER["HTTPS"] != "on")
 		  <li class="nav-item">
 			<a class="nav-link" href="/orders">Orders</a>
 		  </li>
-		  <li class="nav-item">
+		  <!--li class="nav-item">
 			<a class="nav-link" href="/sell">Sell</a>
-		  </li>
+		  </li-->
 		  <?php 
 		  if (isset($_SESSION['email'])){
 			  if ($_SESSION['email']=="bigsqueak@pipsqueak.com")
@@ -157,9 +157,9 @@ if (!isset($_SESSION['email'])){
 		'<div class="overlay_register overlay_form">
 			<h3 class="overlay_header">Register</h3>
 			<form enctype="multipart/form-data" action="logon/register" method="post">
-				<input type="text" id="input_name" name="name" class="form-control" placeholder="Name" required>
-				<input type="email" id="input_email" name="email" class="form-control" placeholder="Email" required>
-				<div class="form-row">
+				<input type="text" id="input_name" name="name" class="form-control mt-4" placeholder="Name" required>
+				<input type="email" id="input_email" name="email" class="form-control mt-3" placeholder="Email" required>
+				<div class="form-row mt-3">
 					<div class="form-group col-md-6">
 						<input type="password" class="form-control" id="input_password" placeholder="Password" required>
 					</div>
@@ -167,13 +167,13 @@ if (!isset($_SESSION['email'])){
 						<input type="password" class="form-control" id="input_password_confirm" name="password" placeholder="Confirm Password" required>
 					</div>
 					</div>
-				<div class="input-group">
+				<div class="input-group mt-1">
 					<div class="input-group-prepend">
 					  <span class="input-group-text" id="validationTooltipUsernamePrepend">65</span>
 					</div>
 					<input type="tel" class="form-control" id="validationTooltipUsername" name="phone" placeholder="Phone number" aria-describedby="validationTooltipUsernamePrepend" required>
 				</div>
-				<div class="form-group mt-3">
+				<div class="form-group mt-4">
 					<input type="submit" class="btn btn-primary" value="Submit">
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
@@ -183,9 +183,9 @@ if (!isset($_SESSION['email'])){
 		<div class="overlay_login overlay_form">
 			<h3 class="overlay_header">Login</h3>
 			<form enctype="multipart/form-data" action="logon/login" method="post">
-				<input type="text" name="email" class="form-control" placeholder="Email" required>
-				<input type="password" name="password" class="form-control" placeholder="Password" required>
-				<div class="form-group mt-3">
+				<input type="text" name="email" class="form-control mt-4" placeholder="Email" required>
+				<input type="password" name="password" class="form-control mt-3" placeholder="Password" required>
+				<div class="form-group mt-4">
 					<input type="submit" class="btn btn-primary" value="Submit">
 					<input type="reset" class="btn btn-default button_cancel" value="Cancel">
 				</div>
@@ -216,6 +216,6 @@ if(isset($_GET["id"])){
 <div class="alert alert-warning mt-3 mb-0 pb-3" role="alert">
 	<div id="button_close_ann" style="position:absolute; top:0; right:10px; cursor: pointer;">x</div>
 	<b>Warning:</b><br>
-	Pipsqueak web is still in its beta stage. If you'd like to help Pipsqueak, please send your bug reports, technical expertise, cheese or well-wishes to her technical advisor at <a href="mailto:ray_cheng@mymail.sutd.edu.sg" class="alert-link">ray_cheng@mymail.sutd.edu.sg</a>
+	Pipsqueak web is still in its beta stage. If you'd like to help Pipsqueak, please send your bug reports, technical expertise, cheese or well-wishes to her technical advisor at <a href="mailto:bigsqueak010@gmail.com" class="alert-link">bigsqueak010@gmail.com</a>
 </div>
 </div>

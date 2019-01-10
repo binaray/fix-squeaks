@@ -90,7 +90,7 @@ if (isset($_GET['logout'])){
 		  <img src="assets/images/20181122_022153.jpg" alt="...">
 		  <div class="carousel-caption">
 			<h3 class="title_category">Welcome!</h3>
-			<p>to Pipsqueak Marketplace. <a href="http://pipsqueak.sg" style="color: #80bdff;">About us</a></p>
+			<p>to Pipsqueak Marketplace. <!--a href="http://pipsqueak.sg" style="color: #80bdff;">About us</a--></p>
 		  </div>
 		</div>
 		<div class="carousel-item">
@@ -220,7 +220,7 @@ if (isset($_GET['logout'])){
 			  </div>
 			</div>
 		</div>
-		<div class="text-center"><a href="mailto:ray_cheng@mymail.sutd.edu.sg">Want more? Suggest a new feature!</a></div>
+		<div class="text-center"><a href="mailto:bigsqueak010@gmail.com">Want more? Suggest a new feature!</a></div>
 	</div>
 
 	<?php $link->close();?>

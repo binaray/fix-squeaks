@@ -97,34 +97,34 @@ else{
 				<li class="nav-item">
 					<a class="nav-link active tab_padding" id="itemDescription-tab" data-toggle="tab" href="#itemDescription" role="tab" aria-controls="itemDescription" aria-selected="true">Description</a>
 				</li>
-				<li class="nav-item">
+				<!--li class="nav-item">
 					<a class="nav-link tab_padding" id="userListings-tab" data-toggle="tab" href="#userListings" role="tab" aria-controls="userListings" aria-selected="false">Listings</a>
-				</li>
+				</li-->
 			</ul>
 			
-			<div class="tab-content mb-5 p-2" id="profileTabContent">
+			<div class="tab-content mb-5 p-3" id="profileTabContent">
 				<div class="tab-pane fade show active" id="itemDescription" role="tabpanel" aria-labelledby="itemDescription-tab"><p><?=$description;?></p><?=$add_description;?></div>
-				<div class="tab-pane fade" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">
+				<!--div class="tab-pane fade" id="userListings" role="tabpanel" aria-labelledby="userListings-tab">
 					<div class="row">
 						<div class="col-2 header_listing">Listing ID</div><div class="col-6">Type</div><div class="col-2">Price</div><div class="col-2">Stock</div>
 					</div>	
 
 					<?php
-					//TODO: swap to ajax for performance
-					//----------------------------------Pull user listings------------------------------------//
-					$sql="SELECT * FROM Listings WHERE itemId = {$_GET["id"]} ORDER BY price";
-					$result = $link->query($sql);
-					$disp_bg = true;
+					// //TODO: swap to ajax for performance
+					// //----------------------------------Pull user listings------------------------------------//
+					// $sql="SELECT * FROM Listings WHERE itemId = {$_GET["id"]} ORDER BY price";
+					// $result = $link->query($sql);
+					// $disp_bg = true;
 					
-					while($row = $result->fetch_assoc()) {
-						if ($result->num_rows== 0) echo "No listings yet!";						
-						echo($disp_bg ?	'<div class="row item_listing pt-2 pb-2" style="background: #ebf8ff;">' : '<div class="row item_listing pt-2 pb-2">');
-						echo'	<div class="col-2 listingId">'.$row["listingId"].'</div><div class="col-6 listingProperties">'.$row["properties"].'</div><div class="col-2 listingPrice">'.$row["price"].'</div><div class="col-2 listingStock">'.$row["quantity"].'</div>
-							</div>';
-						$disp_bg = !$disp_bg;
-					}
+					// while($row = $result->fetch_assoc()) {
+						// if ($result->num_rows== 0) echo "No listings yet!";						
+						// echo($disp_bg ?	'<div class="row item_listing pt-2 pb-2" style="background: #ebf8ff;">' : '<div class="row item_listing pt-2 pb-2">');
+						// echo'	<div class="col-2 listingId">'.$row["listingId"].'</div><div class="col-6 listingProperties">'.$row["properties"].'</div><div class="col-2 listingPrice">'.$row["price"].'</div><div class="col-2 listingStock">'.$row["quantity"].'</div>
+							// </div>';
+						// $disp_bg = !$disp_bg;
+					// }
 					?>
-				</div>
+				</div-->
 			</div>
 		</div>
 	</div>
