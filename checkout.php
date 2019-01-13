@@ -7,6 +7,7 @@ if(isset($_GET["action"])){
 	if($_GET["action"]=="reset"){
 		// unset($_SESSION["listedCart"]);
 		unset($_SESSION["cart"]);
+		header("location: .");
 	}	
 	if(isset($_SESSION["cart"]) && $_GET["action"]=="purchase"){
 		require_once "_config.php";

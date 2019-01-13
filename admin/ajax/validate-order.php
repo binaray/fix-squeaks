@@ -8,28 +8,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$orderId=$_POST["orderId"];
 	
 	if(isset($_POST["issue"])) {
-		$sql = "SELECT Users.userId, Users.name, Users.email, Orders.orderId, Orders.itemsBought FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
+		$sql = "SELECT Users.userId, Users.name, Users.email, Orders.orderId, Orders.itemsBought, Orders.createdAt FROM Orders INNER JOIN Users ON Orders.userID=Users.userID WHERE Orders.orderId = '{$orderId}'";
 		$result = $link->query($sql);
 		while($row = $result->fetch_assoc()) {
 			$itemsBought=$row["itemsBought"];
 			$invNo = $row["orderId"];
 			$clientName = $row["name"];
 			$email = $row["email"];
+			$date = $row["createdAt"];
 		}
-		$date = date_create();
-		$date = date_timestamp_get($date);
+		// $date = date_create();
+		// $date = date_timestamp_get($date);
 		
-		$data = array(
-			'invNo' => $invNo,
-			'clientName' => $clientName,
-			'email' => $email,
-			'itemsBought' => $itemsBought,
-			'dateTimeGenerated' => $date
-		 );
+		// $data = array(
+			// 'invNo' => $invNo,
+			// 'clientName' => $clientName,
+			// 'email' => $email,
+			// 'itemsBought' => $itemsBought,
+			// 'dateTimeGenerated' => $date
+		 // );
 		
 		
 		
-		$jsonEncodedData = json_encode($data);
+		// $jsonEncodedData = json_encode($data);
 		
 		$sql = "UPDATE Orders SET status='APPROVED' WHERE orderId={$orderId}";
 		if ($link->query($sql) === TRUE) {

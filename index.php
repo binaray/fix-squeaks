@@ -93,13 +93,13 @@ if (isset($_GET['logout'])){
 			<p>to Pipsqueak Marketplace. <!--a href="http://pipsqueak.sg" style="color: #80bdff;">About us</a--></p>
 		  </div>
 		</div>
-		<div class="carousel-item">
+		<!--div class="carousel-item">
 		  <img src="assets/images/20181122_021620.jpg" alt="...">
 		  <div class="carousel-caption">
 			<h3 class="title_category">Pipsqueak Listings</h3>
 			<p>Sell project materials, buy from others!</p>
 		  </div>
-		</div>
+		</div-->
 		<div class="carousel-item">
 		  <img src="assets/images/20181122_023519.jpg" alt="...">
 		  <div class="carousel-caption">
