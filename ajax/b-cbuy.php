@@ -1,8 +1,6 @@
 <?php
-//LOCK THIS THREAD TO PREVENT POTENTIAL CONFLICTS
 require_once "../_config.php";
 
-$additional_result_text="";
 
 $itemId = $_GET["item"];
 if (isset($_GET["properties"])) $properties = $_GET["properties"];
@@ -61,12 +59,21 @@ if (isset($userId)){
 			mysqli_stmt_bind_param($stmt, "sss", $userId, $itemsBought, $status);
 			
 			if(mysqli_stmt_execute($stmt)){
-				echo "Successfully ordered!\n".$additional_result_text;
+				mysqli_stmt_close($stmt);
+				$sql = "SELECT LAST_INSERT_ID();";
+				$result = $link->query($sql);
+				
+				while($row = $result->fetch_assoc()) {
+					if ($result->num_rows== 0) echo "Failed!";
+					else {
+						echo $row["LAST_INSERT_ID()"];
+					}
+				}
 			} else{
 				echo "Something went wrong. Please try again later.";
+				mysqli_stmt_close($stmt);
 			}
 		}
-		mysqli_stmt_close($stmt);
 		
 		//update b-c stock
 		$updatedItems = json_encode($items,true);
