@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com")
+if (!isset($_SESSION['admin']))
 	header("location: ../index.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -11,7 +11,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	if(isset($_GET["upload"])){
 		
 		require_once "../_config.php";
-	
+		
+		//get vendorId first
+		$sql="SELECT vendorId FROM Vendors WHERE email = '{$_SESSION["admin"]}'";
+		$result = $link->query($sql);
+		while($row = $result->fetch_assoc()) {
+			if ($result->num_rows== 0) echo "Please login!";
+			$vendorId = $row["vendorId"];
+		}
+		$result->close();
+		echo $vendorId;
 		if($_GET["upload"]=="single"){
 			var_dump($_REQUEST);
 			$csvString = $_POST["csvString"];
@@ -25,11 +34,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 				if (!empty($row[0])){
 					
 					// Prepare an insert statement
-					$sql = "INSERT INTO Inventory (itemName, description, imageUrl, items, category) VALUES (?, ?, ?, ?, ?)";
+					$sql = "INSERT INTO Inventory (itemName, description, imageUrl, items, category, vendorId) VALUES (?, ?, ?, ?, ?, ?)";
 					 
 					if($stmt = mysqli_prepare($link, $sql)){
 						// Bind variables to the prepared statement as parameters
-						mysqli_stmt_bind_param($stmt, "sssss", $itemName, $description, $imageUrl, $item, $category);
+						mysqli_stmt_bind_param($stmt, "ssssss", $itemName, $description, $imageUrl, $item, $category, $vendorId);
 						
 						// Set parameters
 						$itemName = trim($row[0]);
@@ -144,18 +153,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	
 	<div class="container">
 		<form id="itemSingle" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=single"?>" method="post">
-			<h5>csv upload (for single items)</h5>
+			<h5>CSV text upload</h5>
 			<p>Input format:<br>
 			itemName0 | description0 | imageUrl0 | category0 | price0 | quantity0<br>
 			itemName1 | description1 |imageUrl1 | category1 | price1 | quantity1<br>
 			(for quantity: 0 if out of stock, -1 if unavailable)
 			</p>
 			<textarea rows="4" cols="100%" form="itemSingle" name="csvString" placeholder="itemName | description | imageUrl | category | price | quantity..." required></textarea>
-			<div class="form-group">
+			<div class="form-group mt-2">
 				<input type="submit" class="btn btn-primary" value="Submit">
+				<a href="index" class="btn btn-default">Cancel</a>
 			</div>
 		</form>
-		<form id="itemGroup" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=group"?>" method="post">
+		<form id="itemGroup" enctype="multipart/form-data" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])."?upload=group"?>" method="post" style="display: none;">
 			<h5>item group upload (SINGLE ITEM GROUP ONLY)</h5>
 			<p>Input format:<br>
 			itemName | description | defaultImageUrl | category
@@ -183,11 +193,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			</div>
 			<div class="form-group">
 				<input type="submit" class="btn btn-primary" value="Submit">
+				<a href="index" class="btn btn-default">Cancel</a>
 			</div>
 		</form>
 	</div>	
 	
-	<?php include "../footer.php";?>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
