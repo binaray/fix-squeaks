@@ -27,6 +27,7 @@ if (isset($_GET['logout'])){
 	?>
 	-->
   <body>
+	<div class="container">
     <a href="?logout=true">Logout</a>
 	<div class="row">
 		<div class="col-1">Vendor</div>
@@ -47,7 +48,8 @@ if (isset($_GET['logout'])){
         }
 		$result->close();
 		
-		$sql="SELECT * FROM Inventory WHERE vendorId='{$vendorId}'";
+		if ($_SESSION["admin"]=="bigsqueak@pipsqueak.com") $sql="SELECT * FROM Inventory";
+		else $sql="SELECT * FROM Inventory WHERE vendorId='{$vendorId}'";
 		$result = $link->query($sql);
 		
 		while($row = $result->fetch_assoc()) {
@@ -56,6 +58,7 @@ if (isset($_GET['logout'])){
 								<div class='col-2 itemNameId'>".$row["itemName"]."</div>
 								<div class='col-3 options'>".$row["options"]."</div>
 								<div class='col-2 items'>".$row["items"]."</div>
+								<a href='edit?id=".$row["itemId"]."' class='col-2 itemId'>Edit</a>
 							</div>";
 							
 		}
@@ -63,7 +66,9 @@ if (isset($_GET['logout'])){
 	</div>
 
 	<!--Add Items-->
+	<a href="upload" class='col-2 itemId'>Upload</a> 
 	<div class="row">
+		
 		<form name="test1" method="get">
 		<input type="submit" class="btn btn-primary" class="col-2" value="Submit">
 		<input class="col-2" type="text" name="itemId" id="itemId" placeholder="itemId">
@@ -72,44 +77,37 @@ if (isset($_GET['logout'])){
 		<input class="col-2" type="text" name="items" id="items" placeholder="items">
 		</form>
 	</div>
-	
+<!--	
 	<?php 
-		$itemId = $_GET['itemId'];
-		$itemNameId = $_GET['itemNameId'];
-		$options = $_GET['options'];
-		$items = $_GET['items'];
-		echo $_GET['itemId'];
-		echo "\n";
-		echo "<br>"; //new line
-		echo $_GET['itemNameId'];
-		echo "\n";
-		echo "<br>"; //new line
-		echo $_GET['options'];
-		echo "\n";
-		echo "<br>"; //new line
-		echo $_GET['items'];
+		// $itemId = $_GET['itemId'];
+		// $itemNameId = $_GET['itemNameId'];
+		// $options = $_GET['options'];
+		// $items = $_GET['items'];
+		// echo $_GET['itemId'];
+		// echo "\n";
+		// echo "<br>"; //new line
+		// echo $_GET['itemNameId'];
+		// echo "\n";
+		// echo "<br>"; //new line
+		// echo $_GET['options'];
+		// echo "\n";
+		// echo "<br>"; //new line
+		// echo $_GET['items'];
 		
-		$sqlinsert="INSERT INTO inventory (options,items) VALUES ('{$options}','{$items}')";
-		if(mysqli_query($link,$sqlinsert)){
-			echo "New record created successfully";
-		} else {
-			echo "Error: " .$sqlinsert . "<br>" .mysqli_error($link);
-		}
-		mysqli_close($link);
+		// $sqlinsert="INSERT INTO inventory (options,items) VALUES ('{$options}','{$items}')";
+		// if(mysqli_query($link,$sqlinsert)){
+			// echo "New record created successfully";
+		// } else {
+			// echo "Error: " .$sqlinsert . "<br>" .mysqli_error($link);
+		// }
+		// mysqli_close($link);
 	?>
-	
+-->	
 		
 	<!--Remove Items-->
 	<div class="row" class="p-1">
 		<div class="col-2">
 		<button type="button" class="btn btn-lg btn-primary" disabled="disabled">Remove Items</button>
-		</div>
-	</div>
-	
-	<!--Edit Inventory-->
-	<div class="row" class="p-1">
-		<div class="col-2">
-		<button type="button" class="btn btn-lg btn-primary" disabled="disabled">Edit Inventory</button>
 		</div>
 	</div>
 
@@ -118,5 +116,6 @@ if (isset($_GET['logout'])){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
 	<script src="js/nav.js"></script>
+  </div>
   </body>
 </html>
