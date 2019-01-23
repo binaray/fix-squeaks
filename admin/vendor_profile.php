@@ -1,13 +1,10 @@
 <?php
 require_once "../_config.php";
-session_start();
-if (!isset($_SESSION['admin'])) header("location: login");
-if (isset($_GET['logout'])){
-	if ($_GET['logout']) unset($_SESSION['admin']);
-	header("location: ../");
-}
 
-//insert code/html here
+session_start();
+if (isset($_GET['logout'])){
+	if ($_GET['logout']) unset($_SESSION['email']);
+}
 ?>
 
 <!doctype html>
@@ -32,7 +29,6 @@ if (isset($_GET['logout'])){
 	?>
 	-->
   <body>
-    <a href="?logout=true">Logout</a>
 	<div class="row">
 		<div class="col-1">Vendor</div>
 	</div>
@@ -42,17 +38,13 @@ if (isset($_GET['logout'])){
 	</div>
 	<div class="p-1">
 		<?php
-		$sql="SELECT vendorId FROM Vendors WHERE email = '{$_SESSION["admin"]}'";
+		$sql="SELECT vendorId FROM Vendors WHERE email = {$_SESSION["admin"]}";
         $result = $link->query($sql);
-        var_dump($result);
-		printf("Error: %s\n", $link->error);
-		while($row = $result->fetch_assoc()) {
+        while($row = $result->fetch_assoc()) {
             if ($result->num_rows== 0) echo "Please login!";
             $vendorId = $row["vendorId"];
         }
-		$result->close();
-		
-		$sql="SELECT * FROM Inventory WHERE vendorId='{$vendorId}'";
+		$sql="SELECT * FROM Inventory ORDER BY itemId DESC WHERE vendorId='{$vendorId}'";
 		$result = $link->query($sql);
 		
 		while($row = $result->fetch_assoc()) {
@@ -77,7 +69,7 @@ if (isset($_GET['logout'])){
 		<input class="col-2" type="text" name="items" id="items" placeholder="items">
 		</form>
 	</div>
-	
+	<!--
 	<?php 
 		$itemId = $_GET['itemId'];
 		$itemNameId = $_GET['itemNameId'];
@@ -102,7 +94,7 @@ if (isset($_GET['logout'])){
 		}
 		mysqli_close($link);
 	?>
-	
+	-->
 		
 	<!--Remove Items-->
 	<div class="row" class="p-1">
@@ -117,8 +109,7 @@ if (isset($_GET['logout'])){
 		<button type="button" class="btn btn-lg btn-primary" disabled="disabled">Edit Inventory</button>
 		</div>
 	</div>
-
-
+	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>	
