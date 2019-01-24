@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-if (!isset($_SESSION['email'])||$_SESSION['email']!="bigsqueak@pipsqueak.com"){
+if (!isset($_SESSION['admin'])||$_SESSION['admin']!="bigsqueak@pipsqueak.com"){
 	header("location: /");
 }
 
