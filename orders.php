@@ -71,13 +71,13 @@ while($row = $result->fetch_assoc()) {
 		?>
 		
 		
-		<h3>Listing Orders</h3>
+		<!--h3>Listing Orders</h3>
 		<p>Here is the list of your orders with other people. We will contact and send you the item after contacting the seller.</p>
 		<div class='row itemHeader'>
 			<div class='col-2'>Order ID</div>			
 			<div class='col-8'>Items</div>
 			<div class='col-2'>Status</div>
-		</div>
+		</div-->
 		<?php
 		if (isset($userId)){
 			$sql = "SELECT * FROM UserOrders WHERE buyerId = '{$userId}'";

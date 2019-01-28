@@ -2,7 +2,7 @@
 require_once "../_config.php";
 
 if (isset($_GET["orderId"])){
-	$sql = "SELECT * FROM Orders WHERE orderId = '{$_GET["orderId"]}'";
+	$sql = "SELECT Orders.orderId, Orders.userId, Users.telegramId, Orders.itemsBought, Orders.status, Orders.createdAt FROM Orders INNER JOIN Users ON Orders.userId = Users.userId WHERE orderId = '{$_GET["orderId"]}'";
 	$result = $link->query($sql);
 
 	while($row = $result->fetch_assoc()) {
